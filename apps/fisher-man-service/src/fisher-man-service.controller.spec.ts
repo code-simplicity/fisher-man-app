@@ -11,7 +11,9 @@ describe('FisherManServiceController', () => {
       providers: [FisherManServiceService],
     }).compile();
 
-    fisherManServiceController = app.get<FisherManServiceController>(FisherManServiceController);
+    fisherManServiceController = app.get<FisherManServiceController>(
+      FisherManServiceController,
+    );
   });
 
   describe('root', () => {
