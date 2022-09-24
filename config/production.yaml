@@ -1,12 +1,17 @@
 # 生产环境
 
 # 基本配置
-serve:
-  port: 5010,
+http:
+  host: 'localhost'
+  port: 5010
   prefix: # 服务前缀
 
 # 数据库配置过
 db:
+  mysql:
+    url: 'localhost'
+    port: '3060'
+    database: ''
 
 # 缓存
 cache:
