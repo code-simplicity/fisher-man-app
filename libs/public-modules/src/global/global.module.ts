@@ -10,6 +10,7 @@ import { cloneDeepWith, merge } from 'lodash';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { LoggerModule } from '../logger';
 
 export interface GlobalModuleOptions {
   yamlFilePath?: string[]; // 配置文件的路径
@@ -73,6 +74,17 @@ export class GlobalModule {
             return configs;
           },
         ],
+      }),
+
+      // 日志模块
+      LoggerModule.forRoot({
+        isGlobal: true,
+        useFactory: (configService: ConfigService) => {
+          const path = configService.get('logsPath');
+          //  返回文件
+          return { filename: join(rootPath, `logs/${path}/${path}.log`) };
+        },
+        inject: [ConfigService],
       }),
     ];
 
