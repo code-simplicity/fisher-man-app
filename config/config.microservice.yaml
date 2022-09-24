@@ -1,0 +1,22 @@
+# 微服务配置
+
+# TCP: 0
+# REDIS: 1
+# NAST: 2
+
+# 服务端 -- 服务端配置
+microserviceService:
+  transport: 0
+  options:
+    host: localhost
+    port: 5010
+
+# 微服务 -- 客户端配置
+# microserviceClients.key 主要用于注入 @Inject(name)
+
+microserviceClients:
+  FISHER_MAN_SERVICE:
+    transport: 0
+    options:
+      host: localhost
+      port: 5051

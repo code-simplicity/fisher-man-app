@@ -1,7 +1,7 @@
 # 生产环境
 
 # 基本配置
-http:
+serve:
   host: 'localhost'
   port: 5010
   prefix: # 服务前缀

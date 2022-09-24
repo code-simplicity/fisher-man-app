@@ -1,21 +1,18 @@
 // 模块注入
 
+import { GlobalModule } from '@app/public-modules';
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'FISHER_MAN_SERVICE', // 摸鱼君模块哦
-        transport: Transport.TCP,
-        options: {
-          port: 5011,
-        },
-      },
-    ]),
+    GlobalModule.forRoot({
+      yamlFilePath: ['/config/apps/fisher-man-app.yaml'],
+      microservice: ['FISHER_MAN_SERVICE'],
+      cache: true,
+      upload: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

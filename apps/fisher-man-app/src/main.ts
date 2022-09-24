@@ -1,8 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { bootstrapTool } from '@app/public-tool';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(5010);
-}
-bootstrap();
+bootstrapTool(AppModule, {
+  cors: true,
+  before: (app) => {
+    app.use(helmet({ contentSecurityPolicy: false }));
+  },
+});
