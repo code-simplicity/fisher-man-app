@@ -33,11 +33,9 @@ export const bootstrapTool = async (
 
   // 获取配置服务
   const configService = app.get<ConfigService>(ConfigService);
-  console.log('configService ==>', configService);
 
   // 服务配置
   const serve = configService.get('serve');
-  console.log('serve ==>', serve);
 
   // 注入日志服务
   //   const loggerService = app.get(LoggerService);

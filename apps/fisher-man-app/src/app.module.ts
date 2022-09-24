@@ -2,19 +2,17 @@
 
 import { GlobalModule } from '@app/public-modules';
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { FisherManServiceModule } from './fisher-man-service/fisher-man-service.module';
 
 @Module({
   imports: [
     GlobalModule.forRoot({
-      yamlFilePath: ['/config/apps/fisher-man-app.yaml'],
+      yamlFilePath: ['apps/fisher-man-app.yaml'],
       microservice: ['FISHER_MAN_SERVICE'],
       cache: true,
       upload: true,
     }),
+    FisherManServiceModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

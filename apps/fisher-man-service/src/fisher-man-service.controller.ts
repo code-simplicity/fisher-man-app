@@ -6,8 +6,7 @@
  * @FilePath: \fisher-man-app\apps\fisher-man-service\src\fisher-man-service.controller.ts
  * @Description:
  */
-import { Controller, Get } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { Controller, Get, Query } from '@nestjs/common';
 import { FisherManServiceService } from './fisher-man-service.service';
 
 @Controller()
@@ -16,8 +15,8 @@ export class FisherManServiceController {
     private readonly fisherManServiceService: FisherManServiceService,
   ) {}
 
-  @MessagePattern({ cmd: 'getHello' })
-  async getHello(name: string): Promise<string> {
-    return this.fisherManServiceService.getHello(name);
+  @Get('hello')
+  async getHello(@Query() query: any): Promise<string> {
+    return this.fisherManServiceService.getHello(query.name);
   }
 }

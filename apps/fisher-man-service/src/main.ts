@@ -6,21 +6,8 @@
  * @FilePath: \fisher-man-app\apps\fisher-man-service\src\main.ts
  * @Description:
  */
-import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { bootstrapTool } from '@app/public-tool';
 import { FisherManServiceModule } from './fisher-man-service.module';
 
-async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    FisherManServiceModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        port: 5011,
-      },
-    },
-  );
-  await app.listen();
-  console.log('摸鱼君微服务启动成功');
-}
-bootstrap();
+// 启动服务
+bootstrapTool(FisherManServiceModule, { microservice: true });

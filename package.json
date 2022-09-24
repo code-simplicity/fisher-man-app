@@ -84,7 +84,8 @@
     ],
     "moduleNameMapper": {
       "^@app/public-tool(|/.*)$": "<rootDir>/libs/public-tool/src/$1",
-      "^@app/public-modules(|/.*)$": "<rootDir>/libs/public-modules/src/$1"
+      "^@app/public-modules(|/.*)$": "<rootDir>/libs/public-modules/src/$1",
+      "^@app/public-class(|/.*)$": "<rootDir>/libs/public-class/src/$1"
     }
   }
 }

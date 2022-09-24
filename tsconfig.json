@@ -29,6 +29,12 @@
       ],
       "@app/public-modules/*": [
         "libs/public-modules/src/*"
+      ],
+      "@app/public-class": [
+        "libs/public-class/src"
+      ],
+      "@app/public-class/*": [
+        "libs/public-class/src/*"
       ]
     }
   }

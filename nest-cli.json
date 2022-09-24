@@ -44,6 +44,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/public-modules/tsconfig.lib.json"
       }
+    },
+    "public-class": {
+      "type": "library",
+      "root": "libs/public-class",
+      "entryFile": "index",
+      "sourceRoot": "libs/public-class/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/public-class/tsconfig.lib.json"
+      }
     }
   }
 }

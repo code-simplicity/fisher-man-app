@@ -2,15 +2,15 @@
 
 # 基本配置
 serve:
-  host: 'localhost'
+  host: localhost
   port: 5010
-  prefix: # 服务前缀
+  prefix: # 路径前缀
 
 # 数据库配置过
 db:
   mysql:
-    url: 'localhost'
-    port: '3060'
+    url: localhost
+    port: 3060
     database: ''
 
 # 缓存

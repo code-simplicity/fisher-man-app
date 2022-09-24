@@ -1,10 +1,12 @@
+import { GlobalModule } from '@app/public-modules';
 import { Module } from '@nestjs/common';
-import { FisherManServiceController } from './fisher-man-service.controller';
-import { FisherManServiceService } from './fisher-man-service.service';
 
 @Module({
-  imports: [],
-  controllers: [FisherManServiceController],
-  providers: [FisherManServiceService],
+  imports: [
+    GlobalModule.forRoot({
+      yamlFilePath: ['apps/fisher-man-service.yaml'],
+      typeorm: true,
+    }),
+  ],
 })
 export class FisherManServiceModule {}

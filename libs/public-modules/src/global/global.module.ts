@@ -50,24 +50,22 @@ export class GlobalModule {
               'application.prod.yaml',
               'config.file.yaml',
               'config.tx.yaml',
-              `${process.env.NODE_ENV}.yaml`,
+              `${process.env.NODE_ENV || 'development'}.yaml`,
               ...yamlFilePath,
             ];
-            configPath.forEach((path) => {
+            for (const path of configPath) {
               try {
-                // 读取文件
+                // 读取并解析配置文件
                 const filePath = join(rootPath, 'config', path);
-                // 检查文件目录是否存在
-                if (existsSync(filePath)) {
+                if (existsSync(filePath))
                   configs = merge(
                     configs,
                     load(readFileSync(filePath, 'utf8')),
                   );
-                }
               } catch (err) {
                 console.log('err', err);
               }
-            });
+            }
             // 递归将null转为字符串
             configs = cloneDeepWith(configs, (value) => {
               if (value === null) return '';
@@ -80,6 +78,7 @@ export class GlobalModule {
 
     // 开启微服务模块
     if (microservice) {
+      console.log('microservice ==>', microservice);
       // 注册微服务模块到根应用程序中
       imports.push({
         ...ClientsModule.registerAsync(
@@ -89,12 +88,13 @@ export class GlobalModule {
               const microserviceClient = configService.get(
                 `microserviceClients.${name}`,
               );
+              console.log('microserviceClient ==>', microserviceClient);
               return microserviceClient;
             },
             inject: [ConfigService],
           })),
         ),
-        global: true, // 全局开启
+        global: true,
       });
     }
     return {
