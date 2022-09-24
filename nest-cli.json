@@ -1,5 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/fisher-man-app/src",
+  "monorepo": true,
+  "root": "apps/fisher-man-app",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/fisher-man-app/tsconfig.app.json"
+  },
+  "projects": {
+    "fisher-man-app": {
+      "type": "application",
+      "root": "apps/fisher-man-app",
+      "entryFile": "main",
+      "sourceRoot": "apps/fisher-man-app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/fisher-man-app/tsconfig.app.json"
+      }
+    },
+    "fisher-man-service": {
+      "type": "application",
+      "root": "apps/fisher-man-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/fisher-man-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/fisher-man-service/tsconfig.app.json"
+      }
+    }
+  }
 }
