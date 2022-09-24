@@ -1,6 +1,7 @@
+/**
+ * 全局模块配置
+ */
 import { ClientsModule } from '@nestjs/microservices';
-// 全局模块配置
-
 import { rootPath } from '@app/public-tool';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
