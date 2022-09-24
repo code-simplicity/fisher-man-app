@@ -1,0 +1,18 @@
+# 生产环境
+
+# 基本配置
+serve:
+  port: 5010,
+  prefix: # 服务前缀
+
+# 数据库配置过
+db:
+
+# 缓存
+cache:
+
+# swagger文档
+swagger:
+
+# 日志缓存路径
+logsPath:

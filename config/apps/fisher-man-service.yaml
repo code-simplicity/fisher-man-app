@@ -1,0 +1,9 @@
+# 摸鱼君服务端配置
+
+serve:
+  port: 5011
+
+# 微服务（服务端配置）
+microserviceService:
+  options:
+    port: 5111
