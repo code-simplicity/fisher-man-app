@@ -6,6 +6,8 @@ import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { mw } from 'request-ip';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions } from '@nestjs/microservices';
+import { LoggerService } from '@app/public-modules';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // 服务启动配置的参数
 type BootstrapToolType = NestApplicationOptions & {
   // 服务启动之前执行
@@ -38,8 +40,8 @@ export const bootstrapTool = async (
   const serve = configService.get('serve');
 
   // 注入日志服务
-  //   const loggerService = app.get(LoggerService);
-  // app.useLogger(loggerService);
+  const loggerService = app.get(LoggerService);
+  app.useLogger(loggerService);
 
   // 接口请求前缀
   app.setGlobalPrefix(serve.prefix);
@@ -56,18 +58,35 @@ export const bootstrapTool = async (
     app.startAllMicroservices();
   }
 
+  // swagger文档
+  const swagger = configService.get('swagger');
+  // 创建接口文档
+  const documentBuilder = new DocumentBuilder()
+    .setTitle(swagger.title)
+    .setDescription(swagger.description)
+    .addBearerAuth()
+    .addServer(serve.prefix)
+    .setVersion(swagger.version)
+    .build();
+
+  // 创建接口文档
+  const document = SwaggerModule.createDocument(app, documentBuilder, {
+    ignoreGlobalPrefix: true,
+  });
+  SwaggerModule.setup(swagger.path, app, document);
+
   // 启动http服务
   await app.listen(serve.port);
 
   // 捕获进程异常
   process.on('uncaughtException', (err) => {
     // 异常提醒，后面使用日志收集处理
-    console.log('程序异常', err);
+    loggerService.error(err, '进程异常');
   });
 
-  // 日志服务
-  // loggerService.log(
-  //   `http://localhost:${serve.port}/${swagger.path}`,
-  //   swagger.title,
-  // );
+  // 接口日志服务
+  loggerService.log(
+    `http://localhost:${serve.port}/${swagger.path}`,
+    swagger.title,
+  );
 };
