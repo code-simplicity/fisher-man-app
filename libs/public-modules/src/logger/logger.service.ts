@@ -45,9 +45,9 @@ export class LoggerService extends ConsoleLogger {
   }
 
   /**
-   * 日志类型，正常日志
-   * @param message
-   * @param trace
+   * 正常日志
+   * @param message 日志消息
+   * @param trace 日志的来源
    */
   log(message: any, trace: string) {
     super.log.apply(this, arguments);
@@ -56,8 +56,8 @@ export class LoggerService extends ConsoleLogger {
 
   /**
    *错误日志
-   * @param message
-   * @param trace
+   * @param message 日志消息
+   * @param trace 日志的来源
    */
   error(message: any, trace: string) {
     super.error.apply(this, arguments);
@@ -66,8 +66,8 @@ export class LoggerService extends ConsoleLogger {
 
   /**
    *警告日志
-   * @param message
-   * @param trace
+   * @param message 日志消息
+   * @param trace 日志的来源
    */
   warn(message: any, trace: string) {
     super.warn.apply(this, arguments);
@@ -76,8 +76,8 @@ export class LoggerService extends ConsoleLogger {
 
   /**
    *调试日志
-   * @param message
-   * @param trace
+   * @param message 日志消息
+   * @param trace 日志的来源
    */
   debug(message: any, trace: string) {
     super.debug.apply(this, arguments);
@@ -86,8 +86,8 @@ export class LoggerService extends ConsoleLogger {
 
   /**
    *纤细的日志
-   * @param message
-   * @param trace
+   * @param message 日志消息
+   * @param trace 日志的错误
    */
   verbose(message: any, trace: string) {
     super.verbose.apply(this, arguments);

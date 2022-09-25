@@ -103,7 +103,6 @@ export class GlobalModule {
               const microserviceClient = configService.get(
                 `microserviceClients.${name}`,
               );
-              console.log('microserviceClient ==>', microserviceClient);
               return microserviceClient;
             },
             inject: [ConfigService],
@@ -119,9 +118,10 @@ export class GlobalModule {
         TypeOrmModule.forRootAsync({
           useFactory: (configService: ConfigService) => {
             // 获取数据库的连接，开启自动加载实体
-            const db = configService.get('db');
-            return { ...db, autoLoadEntities: true };
+            const { mysql } = configService.get('db');
+            return { ...mysql, autoLoadEntities: true };
           },
+          inject: [ConfigService],
         }),
       );
     }
