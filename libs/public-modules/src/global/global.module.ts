@@ -93,7 +93,6 @@ export class GlobalModule {
 
     // 开启微服务模块
     if (microservice) {
-      console.log('microservice ==>', microservice);
       // 注册微服务模块到根应用程序中
       imports.push({
         ...ClientsModule.registerAsync(

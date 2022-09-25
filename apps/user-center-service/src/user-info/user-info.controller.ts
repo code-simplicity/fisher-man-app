@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UserInfoService } from './user-info.service';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('user-info')
+@ApiTags('用户信息')
+@Controller('ucenter/user-info')
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
 
@@ -23,7 +33,10 @@ export class UserInfoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserInfoDto: UpdateUserInfoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserInfoDto: UpdateUserInfoDto,
+  ) {
     return this.userInfoService.update(+id, updateUserInfoDto);
   }
 

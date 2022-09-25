@@ -5,6 +5,9 @@ import { dateTransformer } from '@app/public-tool';
 import { ApiProperty } from '@app/public-decorator';
 import { CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * 公共模块实体
+ */
 export class CommonEntity {
   @ApiProperty('ID')
   @PrimaryGeneratedColumn('uuid')

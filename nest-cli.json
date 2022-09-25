@@ -71,6 +71,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/public-decorator/tsconfig.lib.json"
       }
+    },
+    "user-center-service": {
+      "type": "application",
+      "root": "apps/user-center-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-center-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-center-service/tsconfig.app.json"
+      }
     }
   }
 }

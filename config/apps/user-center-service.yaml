@@ -1,0 +1,9 @@
+# 摸鱼君用户中心服务端配置
+
+serve:
+  port: 5012
+
+# 微服务（服务端配置）
+microserviceService:
+  options:
+    port: 5112

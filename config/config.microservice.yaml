@@ -19,4 +19,9 @@ microserviceClients:
     transport: 0
     options:
       host: localhost
-      port: 5051
+      port: 5011
+  USER_CENTER_SERVICE:
+    transport: 0
+    options:
+      host: localhost
+      port: 5012

@@ -1,6 +1,7 @@
 /**
  * 数据库orm的设置
  */
+import { sha512 } from 'js-sha512';
 import { ValueTransformer } from 'typeorm';
 import { dateFormat } from './date-format';
 
@@ -25,3 +26,8 @@ export const createTransformer = ({
  * 创建时间转换
  */
 export const dateTransformer = createTransformer({ from: dateFormat });
+
+/**
+ * sha512 密码转化
+ */
+export const sha512Transformer = createTransformer({ to: sha512 });
