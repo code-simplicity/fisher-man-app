@@ -10,7 +10,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation } from '@app/public-decorator';
 
 @ApiTags('用户中心')
 @Controller('ucenter/user')
@@ -18,6 +19,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBody({
+    type: CreateUserDto,
+  })
+  @ApiOperation('用户注册')
+  @ApiResponse({ status: 200, type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
   }

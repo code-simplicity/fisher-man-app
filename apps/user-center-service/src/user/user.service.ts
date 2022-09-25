@@ -21,7 +21,7 @@ export class UserService {
     await this.isUserExists(createUserDto.userName);
     // 创建用户
     const user = await this.userRepository.create(createUserDto);
-    return await this.userRepository.save(createUserDto);
+    return await this.userRepository.save(user);
   }
 
   findAll() {
