@@ -7,10 +7,10 @@ import { sha512Transformer } from '@app/public-tool';
 import { Exclude } from 'class-transformer';
 import { Entity } from 'typeorm';
 
-@Entity()
-export class User extends CommonEntity {
+@Entity({ name: 'uc_user' })
+export class UserEntity extends CommonEntity {
   @ApiProperty('用户名')
-  @Column('用户名', 32, { unique: true })
+  @Column('用户名', 32, { type: 'varchar', unique: true })
   userName: string;
 
   @ApiProperty('密码')
@@ -23,15 +23,15 @@ export class User extends CommonEntity {
   salt: string;
 
   @ApiProperty('等级')
-  @Column('等级', 11, { nullable: true })
-  level = 0;
+  @Column('等级', 11)
+  level: string;
 
   @ApiProperty('性别')
   @Column('性别', 10)
   sex: string;
 
   @ApiProperty('头像地址')
-  @Column('头像地址', 512, { nullable: true })
+  @Column('头像地址', 512)
   avatar: string;
 
   @ApiProperty('签名')

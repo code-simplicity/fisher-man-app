@@ -1,7 +1,7 @@
 /**
  * 时间格式转换
  */
-import moment from 'moment';
+import * as moment from 'moment';
 
 /**
  * 格式转化精度
@@ -18,5 +18,5 @@ export enum Precision {
 /**
  * 时间格式转化
  */
-export const dateFormat = (value: any, template = Precision.Second) =>
+export const dateFormat = (value?: any, template = Precision.Second) =>
   value && moment(value).format(template);

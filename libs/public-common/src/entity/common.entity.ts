@@ -3,7 +3,11 @@
  */
 import { dateTransformer } from '@app/public-tool';
 import { ApiProperty } from '@app/public-decorator';
-import { CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 /**
  * 公共模块实体
@@ -18,6 +22,6 @@ export class CommonEntity {
   createTime: Date;
 
   @ApiProperty('更新时间')
-  @CreateDateColumn({ comment: '更新时间', transformer: dateTransformer })
+  @UpdateDateColumn({ comment: '更新时间', transformer: dateTransformer })
   updateTime: Date;
 }
