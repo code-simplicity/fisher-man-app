@@ -41,6 +41,12 @@
       ],
       "@app/public-common/*": [
         "libs/public-common/src/*"
+      ],
+      "@app/public-decorator": [
+        "libs/public-decorator/src"
+      ],
+      "@app/public-decorator/*": [
+        "libs/public-decorator/src/*"
       ]
     }
   }

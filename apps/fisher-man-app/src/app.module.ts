@@ -3,6 +3,7 @@
 import { GlobalModule } from '@app/public-modules';
 import { Module } from '@nestjs/common';
 import { FisherManServiceModule } from './fisher-man-service/fisher-man-service.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { FisherManServiceModule } from './fisher-man-service/fisher-man-service.
       upload: true,
     }),
     FisherManServiceModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
