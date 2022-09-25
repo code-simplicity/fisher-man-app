@@ -11,7 +11,9 @@ import { cloneDeepWith, merge } from 'lodash';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+
 import { LoggerModule } from '../logger';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 export interface GlobalModuleOptions {
   yamlFilePath?: string[]; // 配置文件的路径
@@ -110,6 +112,20 @@ export class GlobalModule {
         global: true,
       });
     }
+
+    // 配置orm数据库
+    if (typeorm) {
+      imports.push(
+        TypeOrmModule.forRootAsync({
+          useFactory: (configService: ConfigService) => {
+            // 获取数据库的连接，开启自动加载实体
+            const db = configService.get('db');
+            return { ...db, autoLoadEntities: true };
+          },
+        }),
+      );
+    }
+
     return {
       module: GlobalModule,
       imports,

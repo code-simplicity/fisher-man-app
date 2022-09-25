@@ -9,8 +9,8 @@ serve:
 # 数据库配置过
 db:
   mysql:
-    url: localhost
-    port: 3060
+    host: localhost
+    port: 3306
     database: ''
 
 # 缓存

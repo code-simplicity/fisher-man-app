@@ -35,6 +35,12 @@
       ],
       "@app/public-class/*": [
         "libs/public-class/src/*"
+      ],
+      "@app/public-common": [
+        "libs/public-common/src"
+      ],
+      "@app/public-common/*": [
+        "libs/public-common/src/*"
       ]
     }
   }
