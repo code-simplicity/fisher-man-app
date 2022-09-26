@@ -22,12 +22,12 @@ export class UserController {
   @ApiBody({
     type: CreateUserDto,
   })
-  @ApiConsumes('application/json', 'multipart/form-data')
+  // @ApiConsumes('application/json', 'multipart/form-data')
   @ApiOperation('用户注册')
   @ApiResponse({ status: 200, type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
     // TODO：明天编写统一返回结果的公共模块
-    return await this.userService.create(createUserDto);
+    return await this.userService.createUser(createUserDto);
   }
 
   @Get()

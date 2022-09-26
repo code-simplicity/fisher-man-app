@@ -14,7 +14,10 @@ import {
  * @returns
  */
 export const IsNotEmpty = (message: string, options?: ValidationOptions) => {
-  return IsNotEmptySource({ message: `请输入${message}`, ...options });
+  return IsNotEmptySource({
+    message: `请输入${message}`,
+    ...options,
+  });
 };
 
 /**

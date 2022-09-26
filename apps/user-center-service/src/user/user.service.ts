@@ -16,9 +16,12 @@ export class UserService {
    * @param createUserDto
    * @returns
    */
-  async create(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
     // 判断用户是否存在
     await this.isUserExists(createUserDto.userName);
+    // 判断邮箱是否被注册
+    // 判断密码是否是加密的
+    // TODO:明天继续完善实体被携带到dao层的原因
     // 创建用户
     const user = await this.userRepository.create(createUserDto);
     return await this.userRepository.save(user);
