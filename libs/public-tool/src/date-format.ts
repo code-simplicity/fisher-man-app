@@ -20,3 +20,11 @@ export enum Precision {
  */
 export const dateFormat = (value?: any, template = Precision.Second) =>
   value && moment(value).format(template);
+
+/**
+ *客户端的ip地址转换为数字ip
+ * @param ip 客户端ip地址
+ * @returns
+ */
+export const toIp = (ip: string) =>
+  ip.replace?.('::ffff:', '').replace('::1', '127.0.0.1');

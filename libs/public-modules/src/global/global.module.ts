@@ -2,7 +2,11 @@
  * 全局模块配置
  */
 import { ClientsModule } from '@nestjs/microservices';
-import { rootPath } from '@app/public-tool';
+import {
+  HttpExceptionFilter,
+  rootPath,
+  TransformInterceptor,
+} from '@app/public-tool';
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { existsSync, readFileSync } from 'fs';
@@ -135,12 +139,12 @@ export class GlobalModule {
           useValue: new ValidationPipe({ transform: true }),
         },
         // 异常过滤器
-        // {
-        //   provide: APP_FILTER,
-        //   useClass: AllExceptionFilter,
-        // },
+        {
+          provide: APP_FILTER,
+          useClass: HttpExceptionFilter,
+        },
         // 响应参数转化拦截器
-        // { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+        { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
       ],
     };
   }

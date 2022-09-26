@@ -25,7 +25,9 @@ export class UserService {
   }
 
   findAll() {
-    return `This action returns all user`;
+    return {
+      list: `This action returns all user`,
+    };
   }
 
   findOne(id: number) {
