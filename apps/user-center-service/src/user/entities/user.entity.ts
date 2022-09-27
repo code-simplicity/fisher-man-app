@@ -1,16 +1,16 @@
-/**
- * 用户视图类型
- */
 import { CommonEntity } from '@app/public-common';
 import { ApiProperty, Column } from '@app/public-decorator';
 import { sha512Transformer } from '@app/public-tool';
 import { Exclude } from 'class-transformer';
 import { Entity } from 'typeorm';
 
+/**
+ * 用户实体
+ */
 @Entity({ name: 'uc_user' })
-export class UserEntity extends CommonEntity {
+export class User extends CommonEntity {
   @ApiProperty('用户名')
-  @Column('用户名', 32, { type: 'varchar', unique: true })
+  @Column('用户名', 32, { type: 'varchar', unique: true, name: 'user_name' })
   userName: string;
 
   @ApiProperty('密码')
@@ -24,7 +24,7 @@ export class UserEntity extends CommonEntity {
 
   @ApiProperty('等级')
   @Column('等级', 11)
-  level: string;
+  lev: string;
 
   @ApiProperty('性别')
   @Column('性别', 10)

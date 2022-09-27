@@ -1,3 +1,4 @@
+import { User } from '@app/public-common';
 import { ApiProperty, IsNotEmpty, ValidatorUser } from '@app/public-decorator';
 import { IsString } from 'class-validator';
 
@@ -6,7 +7,7 @@ import { IsString } from 'class-validator';
  */
 export class CreateUserDto {
   @ValidatorUser.USERNAME
-  @ApiProperty('用户名', { example: '摸鱼1号' })
+  @ApiProperty('用户名', { example: '摸鱼君1号' })
   @IsNotEmpty('用户名')
   @IsString()
   userName: string;
@@ -23,9 +24,19 @@ export class CreateUserDto {
   @IsString()
   email: string;
 
-  @ApiProperty('手机号', { required: false })
+  @ApiProperty('性别', { example: '男' })
+  @IsNotEmpty('性别')
+  @IsString()
+  sex: string;
+
+  @ApiProperty('签名', { example: '很神秘，什么也没有' })
+  @IsNotEmpty('签名')
+  @IsString()
+  sign: string;
+
+  @ApiProperty('手机号', { example: '1008611' })
   phone?: string;
 
-  @ApiProperty('头像', { required: false })
+  @ApiProperty('头像', { example: User.DEFAULT_AVATAR })
   avatar?: string;
 }

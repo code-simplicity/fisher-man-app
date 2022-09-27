@@ -18,10 +18,18 @@ export class CommonEntity {
   id: string;
 
   @ApiProperty('创建时间')
-  @CreateDateColumn({ comment: '创建时间', transformer: dateTransformer })
+  @CreateDateColumn({
+    comment: '创建时间',
+    transformer: dateTransformer,
+    name: 'create_time',
+  })
   createTime: Date;
 
   @ApiProperty('更新时间')
-  @UpdateDateColumn({ comment: '更新时间', transformer: dateTransformer })
+  @UpdateDateColumn({
+    comment: '更新时间',
+    transformer: dateTransformer,
+    name: 'update_time',
+  })
   updateTime: Date;
 }
