@@ -6,10 +6,12 @@ jwt:
 # 权限配置
 permission:
   # 权限动作集
-  actions: ['create', 'delete', 'update', 'query']
+  actions: [create, delete, update, query]
   # 权限模块
   apps:
     # 账户模块
+    user-center-service: [app, login, settings, token, user, user-info]
+    # 剩余模块后续再加入
 
 # 权限模块名称
 permissionNames:
@@ -17,9 +19,9 @@ permissionNames:
   delete: 删除
   update: 更新
   query: 查询
-  account: 账号管理
-  account.adminRole: 管理员角色
-  account.admin: 管理员账号
+  user-center-service: 摸鱼君统一用户中心
+  user-center-service.app: 用户中心程序
+  user-center-service.login: 登陆
   account.user: 用户账号
   infos: 信息管理
   infos.category: 信息分类

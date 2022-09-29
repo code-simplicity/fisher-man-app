@@ -2,8 +2,8 @@ import { CanActivate, DynamicModule, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtStrategy, JwtStrategyType } from '@app/public-modules/jwtAuth/jwt.strategy';
-import { LocalStrategy, LocalStrategyType } from '@app/public-modules/jwtAuth/local.strategy';
+import { JwtStrategy, JwtStrategyType } from './jwt.strategy';
+import { LocalStrategy, LocalStrategyType } from './local.strategy';
 
 // 接口
 export interface JwtAuthModuleAsyncOptions extends LocalStrategyType, JwtStrategyType {}
