@@ -11,7 +11,6 @@
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "concurrently --kill-others \"nest start fisher-man-app --watch\" \"nest start fisher-man-service --watch\" \"nest start user-center-service --watch\"",
-    "start:app": "nest start fisher-man-app --watch",
     "start:u-center": "nest start user-center-service --watch",
     "start:man-service": "nest start fisher-man-service --watch",
     "start:debug": "nest start --debug --watch",
