@@ -10,7 +10,7 @@ export interface LocalStrategyType {
 }
 
 /**
- * 登陆校验
+ * 本地认证策略
  * @param token
  * @param pattern
  * @constructor

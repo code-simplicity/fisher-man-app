@@ -10,7 +10,7 @@ permission:
   # 权限模块
   apps:
     # 账户模块
-    user-center-service: [app, login, settings, token, user, user-info]
+    user-center-service: [app, login-record, settings, token, user, user-info]
     # 剩余模块后续再加入
 
 # 权限模块名称
@@ -20,11 +20,9 @@ permissionNames:
   update: 更新
   query: 查询
   user-center-service: 摸鱼君统一用户中心
-  user-center-service.app: 用户中心程序
-  user-center-service.login: 登陆
-  account.user: 用户账号
-  infos: 信息管理
-  infos.category: 信息分类
-  infos.article: 文章管理
-  system: 系统设置
-  system.files: 文件管理
+  user-center-service.app: 用户中心-应用程序
+  user-center-service.login-record: 用户中心-用户登录记录
+  user-center-service.settings: 用户中心-系统设置
+  user-center-service.token: 用户中心-token管理
+  user-center-service.user: 用户中心-用户管理
+  user-center-service.user.info: 用户中心-用户信息

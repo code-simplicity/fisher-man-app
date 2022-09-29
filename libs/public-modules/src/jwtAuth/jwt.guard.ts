@@ -1,11 +1,11 @@
 import {
-  CACHE_MANAGER,
   CanActivate,
   ExecutionContext,
   Inject,
   Injectable,
   SetMetadata,
   UseGuards,
+  CACHE_MANAGER,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { get } from 'lodash';
@@ -23,7 +23,7 @@ export class PermissionsGuard implements CanActivate {
    * 可以通过校验的
    * @param context
    */
-  async canActive(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const permissions = this.reflector.get<string[]>('permissions', context.getHandler());
 

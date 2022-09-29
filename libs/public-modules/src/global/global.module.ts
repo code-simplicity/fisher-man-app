@@ -2,12 +2,8 @@
  * 全局模块配置
  */
 import { ClientsModule } from '@nestjs/microservices';
-import {
-  HttpExceptionFilter,
-  rootPath,
-  TransformInterceptor,
-} from '@app/public-tool';
-import { DynamicModule, Module } from '@nestjs/common';
+import { HttpExceptionFilter, rootPath, TransformInterceptor } from '@app/public-tool';
+import { CacheModule, DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { existsSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
@@ -15,9 +11,10 @@ import { cloneDeepWith, merge } from 'lodash';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import redisStore from 'cache-manager-redis-store';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { LoggerModule } from '../logger';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 export interface GlobalModuleOptions {
   yamlFilePath?: string[]; // 配置文件的路径
@@ -35,14 +32,7 @@ export interface GlobalModuleOptions {
 export class GlobalModule {
   // 全局模块初始话， 加载动态模块
   static forRoot(options: GlobalModuleOptions): DynamicModule {
-    const {
-      yamlFilePath = [],
-      microservice,
-      typeorm,
-      upload,
-      cache,
-      txOSS,
-    } = options || {};
+    const { yamlFilePath = [], microservice, typeorm, upload, cache, txOSS } = options || {};
 
     // 导入动态模块
     const imports: DynamicModule['imports'] = [
@@ -65,11 +55,7 @@ export class GlobalModule {
               try {
                 // 读取并解析配置文件
                 const filePath = join(rootPath, 'config', path);
-                if (existsSync(filePath))
-                  configs = merge(
-                    configs,
-                    load(readFileSync(filePath, 'utf8')),
-                  );
+                if (existsSync(filePath)) configs = merge(configs, load(readFileSync(filePath, 'utf8')));
               } catch (err) {
                 console.log('err', err);
               }
@@ -103,9 +89,7 @@ export class GlobalModule {
           microservice.map((name) => ({
             name,
             useFactory: (configService: ConfigService) => {
-              const microserviceClient = configService.get(
-                `microserviceClients.${name}`,
-              );
+              const microserviceClient = configService.get(`microserviceClients.${name}`);
               return microserviceClient;
             },
             inject: [ConfigService],
@@ -127,6 +111,21 @@ export class GlobalModule {
           inject: [ConfigService],
         }),
       );
+    }
+
+    // 缓存开启
+    if (cache) {
+      imports.push({
+        ...CacheModule.registerAsync({
+          useFactory: (configService: ConfigService) => {
+            const { redis } = configService.get('cache');
+            // 使用redis做缓存服务
+            return redis?.host ? { store: redisStore, ...redis } : {};
+          },
+          inject: [ConfigService],
+        }),
+        global: true,
+      });
     }
 
     return {

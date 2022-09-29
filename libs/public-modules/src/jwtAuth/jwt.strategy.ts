@@ -14,27 +14,22 @@ export interface JwtStrategyType {
 
 /**
  * 请求校验
- * @param picks
- * @constructor
  */
 export function JwtStrategy({ picks }: JwtStrategyType) {
   @Injectable()
   class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private readonly configService: ConfigService) {
+    constructor(readonly configService: ConfigService) {
       super({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ignoreExpiration: true, // 忽略过期
-        secretOrKey: configService.get('jwt.secret'), // jwt秘钥
+        ignoreExpiration: false, // 忽略过期
+        secretOrKey: configService.get('jwt.secret'),
       });
     }
 
-    /**
-     * 返回验证的值
-     * @param token
-     */
     validate(token: any) {
       return { id: token[`secret-${this.configService.get('jwt.secret')}`], ...pick(token, picks) };
     }
   }
+
   return class extends JwtStrategy {};
 }
