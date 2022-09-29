@@ -2,8 +2,8 @@
 
 import { GlobalModule } from '@app/public-modules';
 import { Module } from '@nestjs/common';
-import { UserCenterServiceModule } from 'apps/user-center-service/src';
 import { AuthModule } from './auth/auth.module';
+import { UserCenterServiceModule } from '../../user-center-service/src';
 
 @Module({
   imports: [

@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { LoggerService } from '@app/public-modules';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 // 服务启动配置的参数
 type BootstrapToolType = NestApplicationOptions & {
   // 服务启动之前执行
@@ -17,10 +18,7 @@ type BootstrapToolType = NestApplicationOptions & {
 };
 
 // 服务启动的程序
-export const bootstrapTool = async (
-  module: any,
-  bootstrapOptions?: BootstrapToolType,
-) => {
+export const bootstrapTool = async (module: any, bootstrapOptions?: BootstrapToolType) => {
   // 结构服务项配置
   const { before, microservice, ...options } = bootstrapOptions || {};
 
@@ -55,7 +53,7 @@ export const bootstrapTool = async (
     });
 
     // 启动所有微服务
-    app.startAllMicroservices();
+    await app.startAllMicroservices();
   }
 
   // swagger文档
@@ -85,8 +83,5 @@ export const bootstrapTool = async (
   });
 
   // 接口日志服务
-  loggerService.log(
-    `http://localhost:${serve.port}/${swagger.path}`,
-    swagger.title,
-  );
+  loggerService.log(`http://localhost:${serve.port}/${swagger.path}`, swagger.title);
 };

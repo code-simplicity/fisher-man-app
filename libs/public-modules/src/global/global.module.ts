@@ -46,6 +46,7 @@ export class GlobalModule {
             const configPath = [
               'application.dev.yaml',
               'application.prod.yaml',
+              'config.jwt.yaml',
               'config.file.yaml',
               'config.tx.yaml',
               `${process.env.NODE_ENV || 'development'}.yaml`,
