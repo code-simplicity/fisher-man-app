@@ -18,35 +18,29 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/public-tool": [
-        "libs/public-tool/src"
+      "@app/common": [
+        "libs/common/src"
       ],
-      "@app/public-tool/*": [
-        "libs/public-tool/src/*"
+      "@app/common/*": [
+        "libs/common/src/*"
       ],
-      "@app/public-modules": [
-        "libs/public-modules/src"
+      "@app/class": [
+        "libs/class/src"
       ],
-      "@app/public-modules/*": [
-        "libs/public-modules/src/*"
+      "@app/class/*": [
+        "libs/class/src/*"
       ],
-      "@app/public-class": [
-        "libs/public-class/src"
+      "@app/tool": [
+        "libs/tool/src"
       ],
-      "@app/public-class/*": [
-        "libs/public-class/src/*"
+      "@app/tool/*": [
+        "libs/tool/src/*"
       ],
-      "@app/public-common": [
-        "libs/public-common/src"
+      "@app/decorator": [
+        "libs/decorator/src"
       ],
-      "@app/public-common/*": [
-        "libs/public-common/src/*"
-      ],
-      "@app/public-decorator": [
-        "libs/public-decorator/src"
-      ],
-      "@app/public-decorator/*": [
-        "libs/public-decorator/src/*"
+      "@app/decorator/*": [
+        "libs/decorator/src/*"
       ]
     }
   }

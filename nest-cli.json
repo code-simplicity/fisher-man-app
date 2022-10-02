@@ -27,51 +27,6 @@
         "tsConfigPath": "apps/fisher-man-service/tsconfig.app.json"
       }
     },
-    "public-tool": {
-      "type": "library",
-      "root": "libs/public-tool",
-      "entryFile": "index",
-      "sourceRoot": "libs/public-tool/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/public-tool/tsconfig.lib.json"
-      }
-    },
-    "public-modules": {
-      "type": "library",
-      "root": "libs/public-modules",
-      "entryFile": "index",
-      "sourceRoot": "libs/public-modules/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/public-modules/tsconfig.lib.json"
-      }
-    },
-    "public-class": {
-      "type": "library",
-      "root": "libs/public-class",
-      "entryFile": "index",
-      "sourceRoot": "libs/public-class/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/public-class/tsconfig.lib.json"
-      }
-    },
-    "public-common": {
-      "type": "library",
-      "root": "libs/public-common",
-      "entryFile": "index",
-      "sourceRoot": "libs/public-common/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/public-common/tsconfig.lib.json"
-      }
-    },
-    "public-decorator": {
-      "type": "library",
-      "root": "libs/public-decorator",
-      "entryFile": "index",
-      "sourceRoot": "libs/public-decorator/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/public-decorator/tsconfig.lib.json"
-      }
-    },
     "user-center-service": {
       "type": "application",
       "root": "apps/user-center-service",
@@ -79,6 +34,42 @@
       "sourceRoot": "apps/user-center-service/src",
       "compilerOptions": {
         "tsConfigPath": "apps/user-center-service/tsconfig.app.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "class": {
+      "type": "library",
+      "root": "libs/class",
+      "entryFile": "index",
+      "sourceRoot": "libs/class/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/class/tsconfig.lib.json"
+      }
+    },
+    "tool": {
+      "type": "library",
+      "root": "libs/tool",
+      "entryFile": "index",
+      "sourceRoot": "libs/tool/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tool/tsconfig.lib.json"
+      }
+    },
+    "decorator": {
+      "type": "library",
+      "root": "libs/decorator",
+      "entryFile": "index",
+      "sourceRoot": "libs/decorator/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/decorator/tsconfig.lib.json"
       }
     }
   }

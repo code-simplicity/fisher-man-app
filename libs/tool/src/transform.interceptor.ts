@@ -9,7 +9,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { LoggerService } from '@app/public-modules';
+import { LoggerService } from '@app/common';
 import { Observable } from 'rxjs';
 import { TcpContext } from '@nestjs/microservices';
 import { map, tap } from 'rxjs/operators';

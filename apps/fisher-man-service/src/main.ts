@@ -1,5 +1,5 @@
-import { bootstrapTool } from '@app/public-tool';
+import { bootstrap } from '@app/tool';
 import { FisherManServiceModule } from './fisher-man-service.module';
 
 // 启动服务
-bootstrapTool(FisherManServiceModule, { microservice: true });
+bootstrap(FisherManServiceModule, { microservice: true });

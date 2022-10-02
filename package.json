@@ -104,11 +104,10 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/public-tool(|/.*)$": "<rootDir>/libs/public-tool/src/$1",
-      "^@app/public-modules(|/.*)$": "<rootDir>/libs/public-modules/src/$1",
-      "^@app/public-class(|/.*)$": "<rootDir>/libs/public-class/src/$1",
-      "^@app/public-common(|/.*)$": "<rootDir>/libs/public-common/src/$1",
-      "^@app/public-decorator(|/.*)$": "<rootDir>/libs/public-decorator/src/$1"
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@app/class(|/.*)$": "<rootDir>/libs/class/src/$1",
+      "^@app/tool(|/.*)$": "<rootDir>/libs/tool/src/$1",
+      "^@app/decorator(|/.*)$": "<rootDir>/libs/decorator/src/$1"
     }
   }
 }

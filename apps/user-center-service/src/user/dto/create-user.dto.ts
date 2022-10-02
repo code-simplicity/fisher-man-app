@@ -1,5 +1,5 @@
-import { User } from '@app/public-common';
-import { ApiProperty, IsNotEmpty, ValidatorUser } from '@app/public-decorator';
+import { User } from '@app/common';
+import { ApiProperty, IsNotEmpty, ValidatorUser } from '@app/decorator';
 import { IsString } from 'class-validator';
 
 /**

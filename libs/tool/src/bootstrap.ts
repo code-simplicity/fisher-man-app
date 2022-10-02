@@ -6,10 +6,10 @@ import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { mw } from 'request-ip';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions } from '@nestjs/microservices';
-import { LoggerService } from '@app/public-modules';
+import { LoggerService } from '@app/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // 服务启动配置的参数
-type BootstrapToolType = NestApplicationOptions & {
+type BootstrapType = NestApplicationOptions & {
   // 服务启动之前执行
   before?: (app: INestApplication) => void;
   // 是否开启微服务加载
@@ -17,9 +17,9 @@ type BootstrapToolType = NestApplicationOptions & {
 };
 
 // 服务启动的程序
-export const bootstrapTool = async (
+export const bootstrap = async (
   module: any,
-  bootstrapOptions?: BootstrapToolType,
+  bootstrapOptions?: BootstrapType,
 ) => {
   // 结构服务项配置
   const { before, microservice, ...options } = bootstrapOptions || {};

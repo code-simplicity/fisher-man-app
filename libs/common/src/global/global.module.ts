@@ -2,7 +2,7 @@
  * 全局模块配置
  */
 import { ClientsModule } from '@nestjs/microservices';
-import { HttpExceptionFilter, rootPath, TransformInterceptor } from '@app/public-tool';
+import { HttpExceptionFilter, rootPath, TransformInterceptor } from '@app/tool';
 import { CacheModule, DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { existsSync, readFileSync } from 'fs';
@@ -32,7 +32,14 @@ export interface GlobalModuleOptions {
 export class GlobalModule {
   // 全局模块初始话， 加载动态模块
   static forRoot(options: GlobalModuleOptions): DynamicModule {
-    const { yamlFilePath = [], microservice, typeorm, upload, cache, txOSS } = options || {};
+    const {
+      yamlFilePath = [],
+      microservice,
+      typeorm,
+      upload,
+      cache,
+      txOSS,
+    } = options || {};
 
     // 导入动态模块
     const imports: DynamicModule['imports'] = [
@@ -46,6 +53,8 @@ export class GlobalModule {
             const configPath = [
               'application.dev.yaml',
               'application.prod.yaml',
+              'config.microservice.yaml',
+              'config.jwt.yaml',
               'config.file.yaml',
               'config.tx.yaml',
               `${process.env.NODE_ENV || 'development'}.yaml`,
@@ -55,7 +64,11 @@ export class GlobalModule {
               try {
                 // 读取并解析配置文件
                 const filePath = join(rootPath, 'config', path);
-                if (existsSync(filePath)) configs = merge(configs, load(readFileSync(filePath, 'utf8')));
+                if (existsSync(filePath))
+                  configs = merge(
+                    configs,
+                    load(readFileSync(filePath, 'utf8')),
+                  );
               } catch (err) {
                 console.log('err', err);
               }
@@ -83,13 +96,14 @@ export class GlobalModule {
 
     // 开启微服务模块
     if (microservice) {
-      // 注册微服务模块到根应用程序中
       imports.push({
         ...ClientsModule.registerAsync(
           microservice.map((name) => ({
             name,
             useFactory: (configService: ConfigService) => {
-              const microserviceClient = configService.get(`microserviceClients.${name}`);
+              const microserviceClient = configService.get(
+                `microserviceClients.${name}`,
+              );
               return microserviceClient;
             },
             inject: [ConfigService],

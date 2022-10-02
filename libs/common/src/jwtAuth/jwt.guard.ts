@@ -11,13 +11,17 @@ import { Reflector } from '@nestjs/core';
 import { get } from 'lodash';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Cache } from 'cache-manager';
 
 /**
  * 添加权限守卫
  */
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector, @Inject(CACHE_MANAGER) private readonly cacheManager) {}
+  constructor(
+    private readonly reflector: Reflector,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+  ) {}
 
   /**
    * 可以通过校验的
@@ -25,14 +29,19 @@ export class PermissionsGuard implements CanActivate {
    */
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const permissions = this.reflector.get<string[]>('permissions', context.getHandler());
+    const permissions = this.reflector.get<string[]>(
+      'permissions',
+      context.getHandler(),
+    );
 
     // 无权限标识的接口，直接通过
     if (permissions) {
       const [role] = permissions;
 
       // 获取角色权限配置
-      const roles = await this.cacheManager.get(`permissions-${request.user.id}`);
+      const roles = await this.cacheManager.get(
+        `permissions-${request.user.id}`,
+      );
 
       if (!get(roles, role)) return false;
     }

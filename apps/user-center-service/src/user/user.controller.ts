@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiOperation } from '@app/public-decorator';
+import { ApiOperation } from '@app/decorator';
 
 @ApiTags('用户中心')
 @Controller('ucenter/user')

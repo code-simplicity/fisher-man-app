@@ -1,6 +1,6 @@
-import { CommonEntity } from '@app/public-common';
-import { ApiProperty, Column } from '@app/public-decorator';
-import { sha512Transformer } from '@app/public-tool';
+import { CommonEntity } from '@app/common';
+import { ApiProperty, Column } from '@app/decorator';
+import { sha512Transformer } from '@app/tool';
 import { Exclude } from 'class-transformer';
 import { Entity } from 'typeorm';
 

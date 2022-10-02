@@ -6,22 +6,29 @@ import { JwtStrategy, JwtStrategyType } from './jwt.strategy';
 import { LocalStrategy, LocalStrategyType } from './local.strategy';
 
 // 接口
-export interface JwtAuthModuleAsyncType extends LocalStrategyType, JwtStrategyType {}
+export interface JwtAuthModuleAsyncType
+  extends LocalStrategyType,
+    JwtStrategyType {}
 
 /**
  * 鉴权模块
  */
 @Module({})
 export class JwtAuthModule {
-  static forRoot({ token, pattern, picks }: JwtAuthModuleAsyncType): DynamicModule {
+  static forRoot({
+    token,
+    pattern,
+    picks,
+  }: JwtAuthModuleAsyncType): DynamicModule {
     return {
       module: JwtAuthModule,
       imports: [
         PassportModule,
         {
           ...JwtModule.registerAsync({
-            useFactory: (configService: ConfigService) => {
+            useFactory: async (configService: ConfigService) => {
               const { secret, expiresIn } = configService.get('jwt');
+              // 返回验证信息以及过期时间
               return { secret, signOptions: { expiresIn } };
             },
             inject: [ConfigService],
@@ -30,6 +37,7 @@ export class JwtAuthModule {
         },
       ],
       providers: [LocalStrategy({ token, pattern }), JwtStrategy({ picks })],
+      exports: [],
     };
   }
 }

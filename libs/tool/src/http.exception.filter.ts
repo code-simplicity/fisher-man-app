@@ -8,7 +8,7 @@ import {
   ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
-import { LoggerService } from '@app/public-modules';
+import { LoggerService } from '@app/common';
 import { TcpContext } from '@nestjs/microservices';
 import { throwError } from 'rxjs';
 import * as moment from 'moment';

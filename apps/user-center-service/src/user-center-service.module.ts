@@ -1,4 +1,4 @@
-import { GlobalModule } from '@app/public-modules';
+import { GlobalModule, JwtAuthModule } from '@app/common';
 import { Module } from '@nestjs/common';
 import { AppModule } from './app/app.module';
 import { SettingsModule } from './settings/settings.module';

@@ -1,7 +1,7 @@
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOperation } from '@app/public-decorator';
+import { ApiOperation } from '@app/decorator';
 
 /**
  * 鉴权控制器

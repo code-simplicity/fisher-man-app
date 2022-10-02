@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-export * from './bootstrapTool';
+export * from './bootstrap';
 export * from './typeorm';
 export * from './date-format';
 export * from './http.exception.filter';

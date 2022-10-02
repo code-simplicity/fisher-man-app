@@ -10,5 +10,6 @@ import { UserInfoModule } from '../user-info/user-info.module';
   imports: [TypeOrmModule.forFeature([User]), UserInfoModule],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}

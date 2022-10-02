@@ -1,8 +1,8 @@
-import { bootstrapTool } from '@app/public-tool';
+import { bootstrap } from '@app/tool';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
-bootstrapTool(AppModule, {
+bootstrap(AppModule, {
   cors: true,
   before: (app) => {
     app.use(helmet({ contentSecurityPolicy: false }));

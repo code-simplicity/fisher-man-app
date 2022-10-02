@@ -8,12 +8,11 @@
 microserviceService:
   transport: 0
   options:
-    host: localhost
+    host: 0.0.0.0
     port: 5010
 
 # 微服务 -- 客户端配置
 # microserviceClients.key 主要用于注入 @Inject(name)
-
 microserviceClients:
   FISHER_MAN_SERVICE:
     transport: 0

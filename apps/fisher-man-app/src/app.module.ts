@@ -1,20 +1,17 @@
-// 模块注入
-
-import { GlobalModule } from '@app/public-modules';
+import { GlobalModule } from '@app/common';
 import { Module } from '@nestjs/common';
-import { UserCenterServiceModule } from 'apps/user-center-service/src';
 import { AuthModule } from './auth/auth.module';
 
+// 主程序模块注入
 @Module({
   imports: [
     GlobalModule.forRoot({
       yamlFilePath: ['apps/fisher-man-app.yaml'],
-      microservice: ['FISHER_MAN_SERVICE', 'USER_CENTER_SERVICE'],
-      cache: true,
-      upload: true,
+      microservice: ['FISHER_MAN_SERVICE', 'USER_CENTER_SERVICE'], // 微服务名称
+      cache: true, // 开启缓存
+      upload: false,
     }),
     AuthModule,
-    UserCenterServiceModule,
   ],
 })
 export class AppModule {}

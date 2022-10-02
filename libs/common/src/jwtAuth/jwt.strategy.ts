@@ -20,14 +20,17 @@ export function JwtStrategy({ picks }: JwtStrategyType) {
   class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(readonly configService: ConfigService) {
       super({
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // 从请求中读取验证的token
         ignoreExpiration: false, // 忽略过期
         secretOrKey: configService.get('jwt.secret'),
       });
     }
 
-    validate(token: any) {
-      return { id: token[`secret-${this.configService.get('jwt.secret')}`], ...pick(token, picks) };
+    async validate(token: any) {
+      return {
+        id: token[`secret-${this.configService.get('jwt.secret')}`],
+        ...pick(token, picks),
+      };
     }
   }
 

@@ -1,5 +1,5 @@
-import { CommonEntity } from '@app/public-common';
-import { ApiProperty, Column } from '@app/public-decorator';
+import { CommonEntity } from '@app/common';
+import { ApiProperty, Column } from '@app/decorator';
 import { Entity } from 'typeorm';
 
 /**

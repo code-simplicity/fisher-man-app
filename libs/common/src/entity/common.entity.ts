@@ -1,8 +1,8 @@
 /**
  * 公共的实体
  */
-import { dateTransformer } from '@app/public-tool';
-import { ApiProperty } from '@app/public-decorator';
+import { dateTransformer } from '@app/tool';
+import { ApiProperty } from '@app/decorator';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,

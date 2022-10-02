@@ -58,7 +58,7 @@ export class UserService {
   }
 
   /**
-   * 用户名是否存在
+   * 用户是否存在
    * @param username 用户名
    */
   async isUserExists(userName: string) {

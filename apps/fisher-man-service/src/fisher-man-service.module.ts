@@ -1,4 +1,4 @@
-import { GlobalModule } from '@app/public-modules';
+import { GlobalModule } from '@app/common';
 import { Module } from '@nestjs/common';
 
 @Module({
