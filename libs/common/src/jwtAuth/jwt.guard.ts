@@ -37,15 +37,12 @@ export class PermissionsGuard implements CanActivate {
     // 无权限标识的接口，直接通过
     if (permissions) {
       const [role] = permissions;
-
       // 获取角色权限配置
       const roles = await this.cacheManager.get(
         `permissions-${request.user.id}`,
       );
-
       if (!get(roles, role)) return false;
     }
-
     return true;
   }
 }

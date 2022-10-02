@@ -16,7 +16,7 @@ export class UserInfo extends CommonEntity {
   phoneNum: string;
 
   @ApiProperty('邮箱')
-  @Column('邮箱', 128)
+  @Column('邮箱', 128, { unique: true })
   email: string;
 
   @ApiProperty('公司地址')

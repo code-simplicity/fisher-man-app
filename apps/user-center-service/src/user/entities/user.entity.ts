@@ -23,7 +23,7 @@ export class User extends CommonEntity {
   salt: string;
 
   @ApiProperty('等级')
-  @Column('等级', 11)
+  @Column('等级', 11, { default: '1' })
   lev: string;
 
   @ApiProperty('性别')
@@ -39,10 +39,10 @@ export class User extends CommonEntity {
   sign: string;
 
   @ApiProperty('删除标识')
-  @Column('删除标识', 1)
+  @Column('删除标识', 1, { default: '0' })
   deleted: string;
 
   @ApiProperty('状态')
-  @Column('状态', 10)
+  @Column('状态', 10, { default: '0' })
   status: string;
 }

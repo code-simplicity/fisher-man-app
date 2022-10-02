@@ -10,8 +10,8 @@ import { AuthController } from './auth.controller';
   imports: [
     JwtAuthModule.forRoot({
       token: 'USER_CENTER_SERVICE',
-      pattern: 'user.login',
-      picks: ['username'],
+      pattern: 'User.login',
+      picks: ['userName'],
     }),
   ],
   controllers: [AuthController],

@@ -2,7 +2,7 @@
  * 全局模块配置
  */
 import { ClientsModule } from '@nestjs/microservices';
-import { HttpExceptionFilter, rootPath, TransformInterceptor } from '@app/tool';
+import { AllExceptionFilter, rootPath, TransformInterceptor } from '@app/tool';
 import { CacheModule, DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { existsSync, readFileSync } from 'fs';
@@ -57,7 +57,7 @@ export class GlobalModule {
               'config.jwt.yaml',
               'config.file.yaml',
               'config.tx.yaml',
-              `${process.env.NODE_ENV || 'development'}.yaml`,
+              `${process.env.NODE_ENV || 'application.prod'}.yaml`,
               ...yamlFilePath,
             ];
             for (const path of configPath) {
@@ -154,7 +154,7 @@ export class GlobalModule {
         // 异常过滤器
         {
           provide: APP_FILTER,
-          useClass: HttpExceptionFilter,
+          useClass: AllExceptionFilter,
         },
         // 响应参数转化拦截器
         { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },

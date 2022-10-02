@@ -6,7 +6,7 @@ import { lastValueFrom } from 'rxjs';
 
 export interface LocalStrategyType {
   token: string; // 需要验证策略的服务
-  pattern: string; // 需要鉴权的微服务接口
+  pattern: string; // 鉴权的微服务接口
 }
 
 /**
@@ -23,11 +23,12 @@ export function LocalStrategy({ token, pattern }: LocalStrategyType) {
     }
 
     /**
-     * 校验
+     * 本地校验
      * @param userName
      * @param password
      */
-    async validate(userName: string, password: string) {
+    validate(userName: string, password: string) {
+      // 返回最后一个值
       return lastValueFrom(this.client.send(pattern, { userName, password }));
     }
   }

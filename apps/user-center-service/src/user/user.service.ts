@@ -1,17 +1,26 @@
 import { UserInfoService } from './../user-info/user-info.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities';
+import { TransformInstanceToPlain } from 'class-transformer';
+import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
+import { LoggerService } from '@app/common';
+import { keys } from 'lodash';
 
 @Injectable()
 export class UserService {
-  private readonly userInfoRepository: UserInfoService;
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly loggerService: LoggerService,
+    private readonly userInfoService: UserInfoService,
   ) {}
   /**
    * 创建用户
@@ -23,20 +32,53 @@ export class UserService {
     // 判断用户是否存在
     await this.isUserExists(userName);
     // 判断邮箱是否被注册
-    await this.isEmailExists(email);
-    // 判断密码是否是加密的
-    // TODO:明天继续完善实体被携带到dao层的原因
+    await this.userInfoService.isEmailExists(email);
+    // 判断通过注解自动加密
+    // 需要使用到邮箱验证码
+    // 包括图灵验证码
+    // 创建盐值
     // 创建用户
-    const user: any = {
+    const user = {
       ...createUserDto,
-      salt: 1,
-      lev: 1,
-      deleted: '1',
-      status: '1',
+      salt: '1',
     };
-    await this.userRepository.create(user);
+    // 用户信息
+    const userResult = await this.userRepository.save(user);
+    // 判断用户是否插入
+    if (keys(userResult).length === 0)
+      throw new BadRequestException('用户保存失败');
+    // 数据进行结构
+    const { id, avatar } = userResult;
+    this.loggerService.log(userResult, '用户插入成功');
+    // 保存用户到用户信息表
+    const userInfo = {
+      userId: id,
+      email: email,
+    };
+    await this.userInfoService.createUserInfo(userInfo);
+    // 保存用户到用户表
+    return userResult;
+  }
 
-    return await this.userRepository.save(user);
+  /**
+   * 登陆
+   * @param userName 用户名
+   * @param password 密码
+   * @param validatorUser 验证用户
+   */
+  @TransformInstanceToPlain()
+  async login(
+    { userName, password }: UserLoginDto,
+    validatorUser?: (_Entity: User) => void,
+  ) {
+    // @ts-ignore
+    const userOne = await this.userRepository.findOne(userName);
+    if (!userOne || userOne.password !== password) {
+      throw new UnauthorizedException('登陆失败');
+    }
+    // 存在并且密码正确
+    validatorUser?.(userOne);
+    return userOne;
   }
 
   findAll() {
@@ -68,15 +110,5 @@ export class UserService {
       },
     });
     if (user) throw new BadRequestException('用户名已经存在');
-  }
-
-  /**
-   * 判断邮箱是否被注册
-   * @param email 邮箱地址
-   */
-  async isEmailExists(email: any | number) {
-    // 查找邮箱
-    const result = await this.userInfoRepository.findOne(email);
-    if (result) throw new BadRequestException('该邮箱已经被注册');
   }
 }

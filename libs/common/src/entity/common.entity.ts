@@ -15,7 +15,7 @@ import {
 export class CommonEntity {
   @ApiProperty('ID')
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @ApiProperty('创建时间')
   @CreateDateColumn({
@@ -23,7 +23,7 @@ export class CommonEntity {
     transformer: dateTransformer,
     name: 'create_time',
   })
-  createTime: Date;
+  createTime?: Date;
 
   @ApiProperty('更新时间')
   @UpdateDateColumn({
@@ -31,5 +31,5 @@ export class CommonEntity {
     transformer: dateTransformer,
     name: 'update_time',
   })
-  updateTime: Date;
+  updateTime?: Date;
 }

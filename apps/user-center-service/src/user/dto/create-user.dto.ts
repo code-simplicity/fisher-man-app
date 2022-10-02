@@ -1,4 +1,4 @@
-import { User } from '@app/common';
+import { CommonEntity, UserConstants } from '@app/common';
 import { ApiProperty, IsNotEmpty, ValidatorUser } from '@app/decorator';
 import { IsString } from 'class-validator';
 
@@ -37,6 +37,6 @@ export class CreateUserDto {
   @ApiProperty('手机号', { example: '1008611' })
   phone?: string;
 
-  @ApiProperty('头像', { example: User.DEFAULT_AVATAR })
+  @ApiProperty('头像', { example: UserConstants.DEFAULT_AVATAR })
   avatar?: string;
 }

@@ -28,7 +28,7 @@ const HttpStatusText = {
 };
 
 @Catch()
-export class HttpExceptionFilter implements ExceptionFilter {
+export class AllExceptionFilter implements ExceptionFilter {
   constructor(private readonly loggerService: LoggerService) {}
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

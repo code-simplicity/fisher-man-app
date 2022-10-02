@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
@@ -9,8 +9,29 @@ import { UserInfo } from './entities';
 export class UserInfoService {
   constructor(
     @InjectRepository(UserInfo)
-    private readonly userRepository: Repository<UserInfo>,
+    private readonly userInfoRepository: Repository<UserInfo>,
   ) {}
+
+  /**
+   * 保存用户到用户信息表
+   */
+  async createUserInfo(createUserInfoDto: CreateUserInfoDto) {
+    return await this.userInfoRepository.save(createUserInfoDto);
+  }
+
+  /**
+   * 判断邮箱是否被注册
+   * @param email 邮箱
+   */
+  async isEmailExists(email: string) {
+    const result = await this.userInfoRepository.findOne({
+      where: {
+        email,
+      },
+    });
+    if (result) throw new BadRequestException('该邮箱已被注册');
+  }
+
   create(createUserInfoDto: CreateUserInfoDto) {
     return 'This action adds a new userInfo';
   }

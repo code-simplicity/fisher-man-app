@@ -13,7 +13,7 @@ import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('用户信息')
-@Controller('ucenter/user-info')
+@Controller('ucenter/user-info/')
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
 
