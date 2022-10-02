@@ -217,6 +217,21 @@ CREATE TABLE `uc_user_info` (
 
 /*Data for the table `uc_user_info` */
 
+/*Table structure for table `uc_role` */
+
+DROP TABLE IF EXISTS `uc_role`;
+
+CREATE TABLE `uc_role` (
+  `id` varchar(36) NOT NULL COMMENT 'ID',
+  `name` varchar(255) DEFAULT NULL COMMENT '角色名称',
+  `permissions` text COMMENT '权限配置',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
+
+/*Data for the table `uc_role` */
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

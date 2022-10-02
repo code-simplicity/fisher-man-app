@@ -54,7 +54,6 @@ export class AuthService {
     const role = await this.getRoles(user);
     // 返回信息
     return {
-      ...user,
       role,
       access_token,
     };

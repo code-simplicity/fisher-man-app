@@ -14,7 +14,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
+  // @UseGuards(AuthGuard('local'))
   @ApiBody({ type: UserLoginDto })
   @ApiResponse({ status: 200, type: LoginUserInfoDto })
   @ApiOperation('用户登陆')

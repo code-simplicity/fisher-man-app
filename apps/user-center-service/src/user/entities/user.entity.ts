@@ -15,7 +15,7 @@ export class User extends CommonEntity {
 
   @ApiProperty('密码')
   @Exclude()
-  @Column('密码', 128, { transformer: sha512Transformer })
+  @Column('密码', 128)
   password: string;
 
   @ApiProperty('盐值')
