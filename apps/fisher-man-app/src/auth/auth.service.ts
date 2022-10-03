@@ -36,7 +36,6 @@ export class AuthService {
    */
   async getToken(user: User) {
     const { id, username } = user;
-    console.log('getToken User ==>', User);
     // 返回jwt {id: '', userName: ''}
     return this.jwtService.sign({
       [`secret-${this.configService.get('jwt.secret')}`]: id,
@@ -51,7 +50,6 @@ export class AuthService {
   async login(req: any) {
     // 获取用户信息
     const { user, clientIp } = req;
-    console.log('req ==>', req);
     // 鉴权token
     const access_token = await this.getToken(user);
     // 注入登陆id和登陆时间

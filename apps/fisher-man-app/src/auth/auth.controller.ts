@@ -14,12 +14,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard('local')) // 本地校验，然后登陆接口，然后将返回的用户信息存在Req上
   @ApiBody({ type: UserLoginDto })
   @ApiResponse({ status: 200, type: LoginUserInfoDto })
   @ApiOperation('用户登陆')
   login(@Req() req: Request) {
-    console.log('req ==>', req);
     return this.authService.login(req);
   }
 

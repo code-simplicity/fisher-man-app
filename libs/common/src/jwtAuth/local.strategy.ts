@@ -31,7 +31,7 @@ export function LocalStrategy({ token, pattern }: LocalStrategyType) {
     async validate(username: string, password: string) {
       // 返回最后一个值
       const user = await lastValueFrom(
-        this.client.send(pattern, { username, password }),
+        this.client.send(pattern, { username, password }).pipe(timeout(5000)),
       );
       return user;
     }

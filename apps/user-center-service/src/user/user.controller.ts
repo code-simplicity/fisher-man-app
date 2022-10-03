@@ -43,11 +43,9 @@ export class UserController {
   })
   @ApiOperation(`用户登录`)
   async login(@Body() userLoginDto: UserLoginDto) {
-    console.log('1 ==>');
     return this.userService.login(userLoginDto, (userOne: User) => {
       // 判断用户的状态，用户失效返回具体的状态值
       if (userOne.status !== '1') {
-        console.log('1 ==>', 1);
         throw new UnauthorizedException(
           `${UserConstants.USER_STATE[userOne.status]}`,
         );

@@ -1,8 +1,12 @@
 # 微服务配置
 
-# TCP: 0
-# REDIS: 1
-# NAST: 2
+# TCP = 0,
+# REDIS = 1,
+# NATS = 2,
+# MQTT = 3,
+# GRPC = 4,
+# RMQ = 5,
+# KAFKA = 6
 
 # 服务端 -- 服务端配置
 microserviceService:
@@ -18,9 +22,9 @@ microserviceClients:
     transport: 0
     options:
       host: localhost
-      port: 5011
+      port: 5111 # 微服务的端口，注意不是启动的端口，是通信的端口，与apps中的microserviceService中的端口对应
   USER_CENTER_SERVICE:
     transport: 0
     options:
       host: localhost
-      port: 5012
+      port: 5112 # # 微服务的端口，注意不是启动的端口，是通信的端口，与apps中的microserviceService中的端口对应
