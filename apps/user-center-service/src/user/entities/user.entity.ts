@@ -1,6 +1,5 @@
 import { CommonEntity } from '@app/common';
 import { ApiProperty, Column } from '@app/decorator';
-import { sha512Transformer } from '@app/tool';
 import { Exclude } from 'class-transformer';
 import { Entity } from 'typeorm';
 
@@ -11,10 +10,10 @@ import { Entity } from 'typeorm';
 export class User extends CommonEntity {
   @ApiProperty('用户名')
   @Column('用户名', 32, { type: 'varchar', unique: true, name: 'user_name' })
-  userName: string;
+  username: string;
 
   @ApiProperty('密码')
-  @Exclude()
+  @Exclude() // 返回的时候过滤掉密码
   @Column('密码', 128)
   password: string;
 

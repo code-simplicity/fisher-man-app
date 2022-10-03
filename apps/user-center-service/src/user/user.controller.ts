@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +18,7 @@ import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { MessagePattern } from '@nestjs/microservices';
 import { UserConstants } from '@app/common';
 import { User } from './entities';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('用户中心')
 @Controller('ucenter/user/')
@@ -34,18 +36,18 @@ export class UserController {
     return await this.userService.createUser(createUserDto);
   }
 
-  // @MessagePattern(`${this.userService.name}.login`)
-  @MessagePattern(`User.login`)
   @Post('login')
+  @MessagePattern('User.login')
   @ApiBody({
     type: UserLoginDto,
   })
-  // @ApiOperation(`登陆：${this.userService.name}.login`)
-  @ApiOperation(`User.login`)
+  @ApiOperation(`用户登录`)
   async login(@Body() userLoginDto: UserLoginDto) {
+    console.log('1 ==>');
     return this.userService.login(userLoginDto, (userOne: User) => {
       // 判断用户的状态，用户失效返回具体的状态值
       if (userOne.status !== '1') {
+        console.log('1 ==>', 1);
         throw new UnauthorizedException(
           `${UserConstants.USER_STATE[userOne.status]}`,
         );

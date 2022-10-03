@@ -1,7 +1,13 @@
 /**
  * 加权服务模块
  */
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
@@ -10,6 +16,9 @@ import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { User } from '../../../user-center-service/src/user/entities';
 import { dateFormat } from '@app/tool';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { encryptPassword } from '@app/common/utils/cryptogram.util';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +27,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     @Inject('USER_CENTER_SERVICE') private readonly client: ClientProxy,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-    private readonly loggerService: LoggerService,
+    private readonly loggerService: LoggerService, // @InjectRepository(User) // private readonly authRepository: Repository<User>,
   ) {}
 
   /**
@@ -26,11 +35,12 @@ export class AuthService {
    * @param user
    */
   async getToken(user: User) {
-    const { id, userName } = user;
+    const { id, username } = user;
+    console.log('getToken User ==>', User);
     // 返回jwt {id: '', userName: ''}
     return this.jwtService.sign({
       [`secret-${this.configService.get('jwt.secret')}`]: id,
-      userName,
+      username,
     });
   }
 
@@ -39,6 +49,7 @@ export class AuthService {
    * @param req
    */
   async login(req: any) {
+    // 获取用户信息
     const { user, clientIp } = req;
     console.log('req ==>', req);
     // 鉴权token
@@ -49,7 +60,7 @@ export class AuthService {
       login_date: dateFormat(new Date()),
     });
     // 保存登陆的信息
-    await lastValueFrom(this.client.send('User.update', [(user.id, user)]));
+    // await lastValueFrom(this.client.send('User.update', [(user.id, user)]));
     // 获取用户的角色
     const role = await this.getRoles(user);
     // 返回信息
@@ -78,4 +89,25 @@ export class AuthService {
     // 查询角色信息
     const role = await this.getRoles(user);
   }
+
+  /**
+   *
+   */
+  // async validateUserInfo(userName: string, password: string) {
+  //   // 获取用户信息
+  //   const userOne = await this.authRepository
+  //     .createQueryBuilder('uc_user')
+  //     .addSelect('uc_user.salt')
+  //     .addSelect('uc_user.password')
+  //     .where('uc_user.userName = :userName', { userName })
+  //     .getOne();
+  //   if (!userOne) throw new NotFoundException('用户不存在');
+  //   const { salt, password: dbPassword } = userOne;
+  //   // 获取当前的hash密码与数据库中的进行对比
+  //   const currentHashPassword = encryptPassword(password, salt);
+  //   if (currentHashPassword !== dbPassword) {
+  //     throw new BadRequestException('密码不正确');
+  //   }
+  //   return userOne;
+  // }
 }

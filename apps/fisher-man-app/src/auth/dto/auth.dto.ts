@@ -7,7 +7,7 @@ import { UserInfo } from '../../../../user-center-service/src/user-info/entities
 export class UserLoginDto {
   @ValidatorUser.USERNAME
   @ApiProperty('用户名', { example: 'admin' })
-  userName: string;
+  username: string;
 
   @ValidatorUser.PASSWORD
   @ApiProperty('密码', { example: '123456' })

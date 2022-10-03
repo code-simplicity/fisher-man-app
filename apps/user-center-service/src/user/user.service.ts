@@ -24,15 +24,16 @@ export class UserService {
     private readonly loggerService: LoggerService,
     private readonly userInfoService: UserInfoService,
   ) {}
+
   /**
    * 创建用户, 创建的是普通用户
    * @param createUserDto
    * @returns
    */
   async createUser(createUserDto: CreateUserDto) {
-    const { userName, email, password } = createUserDto;
+    const { username, email, password } = createUserDto;
     // 判断用户是否存在
-    await this.isUserExists(userName);
+    await this.isUserExists(username);
     // 判断邮箱是否被注册
     await this.userInfoService.isEmailExists(email);
     // 判断通过注解自动加密
@@ -65,13 +66,13 @@ export class UserService {
 
   /**
    * 登陆
-   * @param userName 用户名
+   * @param username 用户名
    * @param password 密码
-   * @param validatorUser 验证用户
+   * @param validatorUser 验证用户，用户被拉黑或者没有审批通过抛出异常
    */
   @TransformInstanceToPlain()
   async login(
-    { userName, password }: UserLoginDto,
+    { username, password }: UserLoginDto,
     validatorUser?: (_Entity: User) => void,
   ) {
     // 判断token是否存在，如果存在那就直接返回用户信息，过期就进行登录
@@ -80,11 +81,10 @@ export class UserService {
       .createQueryBuilder('uc_user')
       .addSelect('uc_user.salt')
       .addSelect('uc_user.password')
-      .where('uc_user.userName = :userName', { userName })
+      .where('uc_user.username = :username', { username })
       .getOne();
     if (!userOne) throw new NotFoundException('用户不存在');
     const { salt, password: dbPassword } = userOne;
-    this.loggerService.log(salt, '盐值密码');
     // 获取当前的hash密码与数据库中的进行对比
     const currentHashPassword = encryptPassword(password, salt);
     if (currentHashPassword !== dbPassword) {
@@ -97,6 +97,7 @@ export class UserService {
   }
 
   findAll() {
+    console.log('User.name', User.name);
     return {
       list: `This action returns all user`,
     };
@@ -118,10 +119,10 @@ export class UserService {
    * 用户是否存在
    * @param username 用户名
    */
-  async isUserExists(userName: string) {
+  async isUserExists(username: string) {
     const user = await this.userRepository.findOne({
       where: {
-        userName,
+        username,
       },
     });
     if (user) throw new BadRequestException('用户名已经存在');

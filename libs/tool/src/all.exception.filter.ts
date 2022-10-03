@@ -12,7 +12,7 @@ import { LoggerService } from '@app/common';
 import { TcpContext } from '@nestjs/microservices';
 import { throwError } from 'rxjs';
 import * as moment from 'moment';
-import { Request, Response } from 'express';
+
 // 连接线
 const line = '-'.repeat(50);
 // 判断是否中文
@@ -30,12 +30,13 @@ const HttpStatusText = {
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   constructor(private readonly loggerService: LoggerService) {}
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     // 请求
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest();
     // 响应
-    const response = ctx.getResponse<Response>();
+    const response = ctx.getResponse();
     // 错误日志
     const errorLog = exception;
     // 错误状态码
@@ -82,7 +83,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     this.loggerService.error(resJson, '响应错误');
     this.loggerService.log(line, '请求结束');
     if (response instanceof TcpContext) {
-      return throwError(() => exception);
+      return throwError(exception);
     }
     // 返回json格式的错误提示
     response.status(code).json(resJson);

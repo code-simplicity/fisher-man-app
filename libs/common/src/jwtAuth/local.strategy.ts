@@ -1,8 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, timeout } from 'rxjs';
+import { response } from 'express';
 
 export interface LocalStrategyType {
   token: string; // 需要验证策略的服务
@@ -24,12 +25,15 @@ export function LocalStrategy({ token, pattern }: LocalStrategyType) {
 
     /**
      * 本地校验
-     * @param userName
+     * @param username
      * @param password
      */
-    validate(userName: string, password: string) {
+    async validate(username: string, password: string) {
       // 返回最后一个值
-      return lastValueFrom(this.client.send(pattern, { userName, password }));
+      const user = await lastValueFrom(
+        this.client.send(pattern, { username, password }),
+      );
+      return user;
     }
   }
 

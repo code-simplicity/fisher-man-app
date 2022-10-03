@@ -10,7 +10,7 @@ export class CreateUserDto {
   @ApiProperty('用户名', { example: '摸鱼君1号' })
   @IsNotEmpty('用户名')
   @IsString()
-  userName: string;
+  username: string;
 
   @ValidatorUser.PASSWORD
   @ApiProperty('密码', { example: '123456' })

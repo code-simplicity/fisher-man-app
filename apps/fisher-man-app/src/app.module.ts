@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     GlobalModule.forRoot({
       yamlFilePath: ['apps/fisher-man-app.yaml'],
-      microservice: ['FISHER_MAN_SERVICE', 'USER_CENTER_SERVICE'], // 微服务名称
+      microservice: ['USER_CENTER_SERVICE', 'FISHER_MAN_SERVICE'], // 微服务名称
       cache: true, // 开启缓存
       upload: false,
     }),

@@ -11,7 +11,7 @@ import { AuthController } from './auth.controller';
     JwtAuthModule.forRoot({
       token: 'USER_CENTER_SERVICE',
       pattern: 'User.login',
-      picks: ['userName'],
+      picks: ['username'],
     }),
   ],
   controllers: [AuthController],
