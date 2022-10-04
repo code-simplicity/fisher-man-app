@@ -60,6 +60,10 @@ export class AuthService {
         refreshToken: refreshToken,
       }),
     );
+    // 保存盐到redis
+    await this.cacheManager.set(UserConstants.SALT_KEY + salt, salt, {
+      ttl: ttl,
+    });
     return refreshToken;
   }
 

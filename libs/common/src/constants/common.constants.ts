@@ -19,4 +19,5 @@ export const UserConstants = {
     },
   ],
   TOKEN_KEY: 'token_key_',
+  SALT_KEY: 'salt_key_',
 };
