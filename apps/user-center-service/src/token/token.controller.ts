@@ -40,6 +40,16 @@ export class TokenController {
     return this.tokenService.update(+id, updateTokenDto);
   }
 
+  /**
+   * 创建token
+   */
+  @Post('create')
+  @MessagePattern('Token.create')
+  @ApiOperation('创建token')
+  createToken(@Body() createTokenDto: CreateTokenDto) {
+    return this.tokenService.createToken(createTokenDto);
+  }
+
   @Delete(':userId')
   @MessagePattern('Token.remove')
   @ApiOperation(`删除token`)

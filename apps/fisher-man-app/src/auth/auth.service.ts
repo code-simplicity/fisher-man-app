@@ -13,6 +13,7 @@ import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { dateFormat } from '@app/tool';
 import { User } from '@apps/user-center-service/user/entities';
+import { TokenService } from '@apps/user-center-service/token/token.service';
 
 /**
  * 加权服务模块
@@ -51,6 +52,14 @@ export class AuthService {
     await this.cacheManager.set(tokenKey, refreshToken, {
       ttl: ttl,
     });
+    // 缓存完成之后将token存储到数据库中
+    await lastValueFrom(
+      this.client.send('Token.create', {
+        userId: id,
+        tokenKey: tokenKey,
+        refreshToken: refreshToken,
+      }),
+    );
     return refreshToken;
   }
 

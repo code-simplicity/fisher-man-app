@@ -162,7 +162,7 @@ DROP TABLE IF EXISTS `uc_token`;
 CREATE TABLE `uc_token` (
   `id` varchar(36) NOT NULL COMMENT 'ID',
   `user_id` varchar(36) DEFAULT NULL COMMENT '用户ID',
-  `refresh_token` varchar(128) DEFAULT NULL COMMENT '刷新token',
+  `refresh_token` varchar(512) DEFAULT NULL COMMENT '刷新token',
   `token_key` varchar(32) DEFAULT NULL COMMENT 'token的md5值',
   `login_from` varchar(10) DEFAULT NULL COMMENT '登录来源',
   `app_id` varchar(36) DEFAULT NULL COMMENT '应用ID',
