@@ -41,6 +41,12 @@
       ],
       "@app/decorator/*": [
         "libs/decorator/src/*"
+      ],
+      "@apps/user-center-service": [
+        "apps/user-center-service/src"
+      ],
+      "@apps/user-center-service/*": [
+        "apps/user-center-service/src/*"
       ]
     }
   }

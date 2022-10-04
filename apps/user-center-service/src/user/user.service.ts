@@ -60,6 +60,7 @@ export class UserService {
       email: email,
     };
     await this.userInfoService.createUserInfo(userInfo);
+    // 创建token，保存
     // 保存用户到用户表
     return userResult;
   }

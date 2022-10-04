@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiOperation } from '@app/decorator';
 import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { MessagePattern } from '@nestjs/microservices';
@@ -54,6 +54,8 @@ export class UserController {
   }
 
   @Get()
+  @ApiBearerAuth() // 鉴权
+  @UseGuards(AuthGuard('jwt')) // 路由守卫
   findAll() {
     return this.userService.findAll();
   }

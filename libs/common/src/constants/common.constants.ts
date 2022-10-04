@@ -18,4 +18,5 @@ export const UserConstants = {
       statusName: '账户已冻结',
     },
   ],
+  TOKEN_KEY: 'token_key_',
 };

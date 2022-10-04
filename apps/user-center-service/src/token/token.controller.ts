@@ -10,8 +10,13 @@ import {
 import { TokenService } from './token.service';
 import { CreateTokenDto } from './dto/create-token.dto';
 import { UpdateTokenDto } from './dto/update-token.dto';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { MessagePattern } from '@nestjs/microservices';
+import { DeleteTokenDto } from './dto';
+import { ApiOperation } from '@app/decorator';
 
-@Controller('token')
+@ApiTags('用户token')
+@Controller('token/')
 export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
@@ -35,8 +40,10 @@ export class TokenController {
     return this.tokenService.update(+id, updateTokenDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tokenService.remove(+id);
+  @Delete(':userId')
+  @MessagePattern('Token.remove')
+  @ApiOperation(`删除token`)
+  remove(@Param('userId') userId: string) {
+    return this.tokenService.remove(userId);
   }
 }
