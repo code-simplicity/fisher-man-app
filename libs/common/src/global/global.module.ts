@@ -1,6 +1,3 @@
-/**
- * 全局模块配置
- */
 import { ClientsModule } from '@nestjs/microservices';
 import { AllExceptionFilter, rootPath, TransformInterceptor } from '@app/tool';
 import { CacheModule, DynamicModule, Module } from '@nestjs/common';
@@ -11,11 +8,13 @@ import { cloneDeepWith, merge } from 'lodash';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import redisStore from 'cache-manager-redis-store';
+import * as redisStore from 'cache-manager-redis-store';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { LoggerModule } from '../logger';
 
+/**
+ * 全局模块配置
+ */
 export interface GlobalModuleOptions {
   yamlFilePath?: string[]; // 配置文件的路径
   microservice?: string[]; // 开启微服务的模块
