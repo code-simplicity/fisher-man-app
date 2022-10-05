@@ -225,7 +225,7 @@ CREATE TABLE `uc_role` (
   `id` varchar(36) NOT NULL COMMENT 'ID',
   `name` varchar(255) DEFAULT NULL COMMENT '角色名称',
   `permissions` text COMMENT '权限配置',
-  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';

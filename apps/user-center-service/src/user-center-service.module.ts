@@ -7,6 +7,7 @@ import { UserInfoModule } from './user-info/user-info.module';
 import { UserModule } from './user/user.module';
 import { LoginRecordModule } from './login-record/login-record.module';
 import { RoleModule } from './role/role.module';
+import { ServiceConfigModule } from './service-config/service-config.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RoleModule } from './role/role.module';
     SettingsModule,
     AppModule,
     LoginRecordModule,
+    ServiceConfigModule,
   ],
 })
 export class UserCenterServiceModule {}
