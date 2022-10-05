@@ -8,6 +8,8 @@ import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { LoggerService } from '@app/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+
 // 服务启动配置的参数
 type BootstrapType = NestApplicationOptions & {
   // 服务启动之前执行
@@ -25,7 +27,7 @@ export const bootstrap = async (
   const { before, microservice, ...options } = bootstrapOptions || {};
 
   // 创建一个服务
-  const app = await NestFactory.create(module, options);
+  const app = await NestFactory.create<INestApplication>(module, options);
 
   //   服务执行之前
   before?.(app);
@@ -77,6 +79,9 @@ export const bootstrap = async (
 
   // 启动http服务
   await app.listen(serve.port);
+
+  // 配置cookie
+  app.use(cookieParser());
 
   // 捕获进程异常
   process.on('uncaughtException', (err) => {

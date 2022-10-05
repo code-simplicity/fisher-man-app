@@ -2,6 +2,7 @@
  * typeorm自定义装饰器
  */
 import { ColumnOptions, Column as ColumnSource } from 'typeorm';
+import { ColumnCommonOptions } from 'typeorm/decorator/options/ColumnCommonOptions';
 
 /**
  * 列装饰器
@@ -17,4 +18,14 @@ export const Column = (
 ) => {
   if (typeof length === 'number') length = { length };
   return ColumnSource({ comment, ...length, ...options });
+};
+
+/**
+ * JSON格式的列装饰器
+ * @param comment
+ * @param options
+ * @constructor
+ */
+export const ColumnJson = (comment: string, options?: ColumnCommonOptions) => {
+  return ColumnSource('simple-json', { comment, ...options });
 };

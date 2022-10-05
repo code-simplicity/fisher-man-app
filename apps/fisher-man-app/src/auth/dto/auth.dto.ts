@@ -1,5 +1,6 @@
 import { ApiProperty, ValidatorUser } from '@app/decorator';
-import { UserInfo } from '../../../../user-center-service/src/user-info/entities';
+import { Role } from '@apps/user-center-service/role/entities';
+import { UserInfo } from '@apps/user-center-service/user-info/entities';
 
 /**
  * 账户登陆
@@ -19,7 +20,7 @@ export class UserLoginDto {
  */
 export class UserInfoDto extends UserInfo {
   @ApiProperty('角色信息')
-  role: [];
+  role: Role;
 }
 
 /**

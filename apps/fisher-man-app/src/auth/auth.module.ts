@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthModule } from '@app/common';
 import { AuthController } from './auth.controller';
+import { BaseService } from '@app/class/base/base-service';
 
 /**
  * 鉴权模块
@@ -15,6 +16,6 @@ import { AuthController } from './auth.controller';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, BaseService],
 })
 export class AuthModule {}

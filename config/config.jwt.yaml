@@ -7,10 +7,10 @@ jwt:
 permission:
   # 权限动作集
   actions: [create, delete, update, query]
-  # 权限模块
+  # 服务模块
   apps:
     # 账户模块
-    user-center-service: [app, login-record, settings, token, user, user-info]
+    user-center-service: [app, login-record, settings, token, user, user-info, role]
     # 剩余模块后续再加入
 
 # 权限模块名称

@@ -1,6 +1,8 @@
 import { UserInfoService } from './../user-info/user-info.service';
 import {
   BadRequestException,
+  CACHE_MANAGER,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -15,6 +17,7 @@ import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { LoggerService } from '@app/common';
 import { keys } from 'lodash';
 import { encryptPassword, makeSalt } from '@app/common/utils/cryptogram.util';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class UserService {
@@ -23,6 +26,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     private readonly loggerService: LoggerService,
     private readonly userInfoService: UserInfoService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   /**
@@ -36,7 +40,6 @@ export class UserService {
     await this.isUserExists(username);
     // 判断邮箱是否被注册
     await this.userInfoService.isEmailExists(email);
-    // 判断通过注解自动加密
     // 需要使用到邮箱验证码
     // 包括图灵验证码
     // 通过bcryptjs加密库创建盐值
@@ -95,6 +98,15 @@ export class UserService {
     // 存在并且密码正确
     validatorUser?.(userOne);
     return userOne;
+  }
+
+  /**
+   * 检查token是否过期
+   */
+  async checkToken() {
+    // 首先从redis拿到token，redis中设置的是两个小时过期
+    // const tokenKey = await this.cacheManager.get();
+    // TODO：明天继续写检查token的，
   }
 
   findAll() {

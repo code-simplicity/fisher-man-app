@@ -1,9 +1,10 @@
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation } from '@app/decorator';
 import { LoginUserInfoDto, UserInfoDto, UserLoginDto } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 
 /**
  * 鉴权控制器
@@ -18,8 +19,8 @@ export class AuthController {
   @ApiBody({ type: UserLoginDto })
   @ApiResponse({ status: 200, type: LoginUserInfoDto })
   @ApiOperation('用户登陆')
-  login(@Req() req: Request) {
-    return this.authService.login(req);
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.login(req, res);
   }
 
   @Get('user/info')

@@ -18,6 +18,10 @@ export const UserConstants = {
       statusName: '账户已冻结',
     },
   ],
+  // token的key
   TOKEN_KEY: 'token_key_',
+  // 盐值的key
   SALT_KEY: 'salt_key_',
+  // 摸鱼君cookie的key
+  FISHER_COOKIE_KEY: 'fisher_cookie_key_',
 };

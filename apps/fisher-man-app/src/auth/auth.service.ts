@@ -13,7 +13,9 @@ import { lastValueFrom } from 'rxjs';
 import { Cache } from 'cache-manager';
 import { dateFormat } from '@app/tool';
 import { User } from '@apps/user-center-service/user/entities';
-import { TokenService } from '@apps/user-center-service/token/token.service';
+import { setUpCookie } from '@app/common/utils';
+import { BaseService } from '@app/class/base/base-service';
+import { Request, Response } from 'express';
 
 /**
  * 加权服务模块
@@ -25,7 +27,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     @Inject('USER_CENTER_SERVICE') private readonly client: ClientProxy,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-    private readonly loggerService: LoggerService,
+    private readonly loggerService: LoggerService, // private readonly baseService: BaseService,
   ) {}
 
   /**
@@ -33,8 +35,9 @@ export class AuthService {
    * @param user
    * @param ttl
    */
-  async createToken(user: User, ttl: number) {
+  async createToken(response: Response, user: User, ttl: number) {
     const { username, id, salt } = user;
+    // token是由盐+用户的信息，比如用户
     // 创建tokenKey
     const tokenKey = UserConstants.TOKEN_KEY + salt;
     // 创建refreshToken
@@ -60,6 +63,8 @@ export class AuthService {
         refreshToken: refreshToken,
       }),
     );
+    // 设置token签发到cookie中
+    setUpCookie(response, UserConstants.FISHER_COOKIE_KEY, tokenKey);
     // 保存盐到redis
     await this.cacheManager.set(UserConstants.SALT_KEY + salt, salt, {
       ttl: ttl,
@@ -71,12 +76,12 @@ export class AuthService {
    * 登陆模块
    * @param req
    */
-  async login(req: any) {
+  async login(req: any, response: Response) {
     // 获取用户信息
-    const { user, clientIp } = req;
+    const { user, clientIp: clientIp } = req;
     const ttl = parseInt(this.configService.get('jwt.expiresIn'));
     // 登陆校验成功时候创建token
-    const access_token = await this.createToken(user, ttl);
+    const access_token = await this.createToken(response, user, ttl);
     // 然后从缓存中拿到token
     // 鉴权token
 

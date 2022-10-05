@@ -53,6 +53,15 @@ export class UserController {
     });
   }
 
+  /**
+   * 检查token是否过期
+   */
+  @Get('check/token')
+  @ApiOperation(`检查用户token`)
+  async checkToken() {
+    return await this.userService.checkToken();
+  }
+
   @Get()
   @ApiBearerAuth() // 鉴权
   @UseGuards(AuthGuard('jwt')) // 路由守卫
