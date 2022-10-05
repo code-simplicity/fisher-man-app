@@ -11,6 +11,7 @@ permission:
   apps:
     # 账户模块
     user-center-service: [app, login-record, settings, token, user, user-info, role]
+    fisher-man-service: [app]
     # 剩余模块后续再加入
 
 # 权限模块名称

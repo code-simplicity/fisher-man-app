@@ -15,6 +15,7 @@ import { ServiceConfigModule } from './service-config/service-config.module';
       yamlFilePath: ['apps/user-center-service.yaml'],
       typeorm: true,
       cache: true,
+      throttler: true, // 开启接口限速
     }),
     UserModule,
     UserInfoModule,

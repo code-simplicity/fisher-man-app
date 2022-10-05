@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
       microservice: ['USER_CENTER_SERVICE', 'FISHER_MAN_SERVICE'], // 微服务名称
       cache: true, // 开启缓存
       upload: false,
+      throttler: true, // 开启接口限速
     }),
     AuthModule,
   ],

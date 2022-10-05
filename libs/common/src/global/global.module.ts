@@ -7,10 +7,11 @@ import { load } from 'js-yaml';
 import { cloneDeepWith, merge } from 'lodash';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import * as redisStore from 'cache-manager-redis-store';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from '../logger';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 /**
  * 全局模块配置
@@ -22,6 +23,7 @@ export interface GlobalModuleOptions {
   upload?: boolean; // 开启文件上传
   cache?: boolean; // 开启缓存
   txOSS?: boolean; // 开启腾讯云对象存储
+  throttler?: boolean; // 开启接口限速
 }
 
 /**
@@ -38,6 +40,7 @@ export class GlobalModule {
       upload,
       cache,
       txOSS,
+      throttler,
     } = options || {};
 
     // 导入动态模块
@@ -93,6 +96,26 @@ export class GlobalModule {
       }),
     ];
 
+    // 限制接口访问次数，限流
+    if (throttler) {
+      imports.push({
+        // 限制接口访问次数，限流
+        ...ThrottlerModule.forRootAsync({
+          useFactory: (configService: ConfigService) => {
+            const { ttl, limit } = configService.get('throttler');
+            console.log('ttl ==>', ttl);
+            console.log('limit ==>', limit);
+            return {
+              ttl: ttl,
+              limit: limit,
+            };
+          },
+          inject: [ConfigService],
+        }),
+        global: true,
+      });
+    }
+
     // 开启微服务模块
     if (microservice) {
       imports.push({
@@ -145,6 +168,10 @@ export class GlobalModule {
       module: GlobalModule,
       imports,
       providers: [
+        {
+          provide: APP_GUARD,
+          useClass: ThrottlerGuard,
+        },
         // 全局管道验证
         {
           provide: APP_PIPE,
