@@ -9,6 +9,7 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 import { LoggerService } from '@app/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import * as csurf from 'csurf';
 
 // 服务启动配置的参数
 type BootstrapType = NestApplicationOptions & {
@@ -34,6 +35,9 @@ export const bootstrap = async (
 
   // 获取客户端真实的ip
   app.use(mw());
+
+  // 跨站请求伪造保护
+  app.use(csurf);
 
   // 获取配置服务
   const configService = app.get<ConfigService>(ConfigService);
