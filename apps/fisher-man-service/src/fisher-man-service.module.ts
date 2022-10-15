@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
     GlobalModule.forRoot({
       yamlFilePath: ['apps/fisher-man-service.yaml'],
       typeorm: true,
+      throttler: true, // 开启接口限速
     }),
   ],
 })
