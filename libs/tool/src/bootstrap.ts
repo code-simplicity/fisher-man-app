@@ -36,9 +36,6 @@ export const bootstrap = async (
   // 获取客户端真实的ip
   app.use(mw());
 
-  // 跨站请求伪造保护
-  app.use(csurf);
-
   // 获取配置服务
   const configService = app.get<ConfigService>(ConfigService);
 
@@ -86,6 +83,9 @@ export const bootstrap = async (
 
   // 配置cookie
   app.use(cookieParser());
+
+  // 跨站请求伪造保护
+  app.use(csurf({ cookie: true }));
 
   // 捕获进程异常
   process.on('uncaughtException', (err) => {
