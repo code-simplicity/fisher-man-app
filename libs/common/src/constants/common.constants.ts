@@ -24,4 +24,6 @@ export const UserConstants = {
   SALT_KEY: 'salt_key_',
   // 摸鱼君cookie的key
   FISHER_COOKIE_KEY: 'fisher_cookie_key_',
+  // 邮箱验证码的key
+  FISHER_EMAIL_KEY: 'fisher_email_key_',
 };
