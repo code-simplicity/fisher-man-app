@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { LoginRecordModule } from './login-record/login-record.module';
 import { RoleModule } from './role/role.module';
 import { ServiceConfigModule } from './service-config/service-config.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ServiceConfigModule } from './service-config/service-config.module';
       typeorm: true,
       cache: true,
       throttler: true, // 开启接口限速
+      email: true,
     }),
     UserModule,
     UserInfoModule,
@@ -25,6 +27,7 @@ import { ServiceConfigModule } from './service-config/service-config.module';
     AppModule,
     LoginRecordModule,
     ServiceConfigModule,
+    EmailModule,
   ],
 })
 export class UserCenterServiceModule {}

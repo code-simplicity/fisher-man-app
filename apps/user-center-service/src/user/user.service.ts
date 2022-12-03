@@ -18,6 +18,7 @@ import { LoggerService } from '@app/common';
 import { keys } from 'lodash';
 import { encryptPassword, makeSalt } from '@app/common/utils/cryptogram.util';
 import { Cache } from 'cache-manager';
+import { UserEmailDto } from '@apps/user-center-service/email/dto/user-email.dto';
 
 @Injectable()
 export class UserService {
@@ -107,6 +108,14 @@ export class UserService {
     // 首先从redis拿到token，redis中设置的是两个小时过期
     // const tokenKey = await this.cacheManager.get();
     // TODO：明天继续写检查token的，
+  }
+
+  /**
+   * 发送邮箱验证码
+   * @param userEmailDto
+   */
+  async sendEmilaCode(userEmailDto: UserEmailDto) {
+    // 实现邮箱的集成
   }
 
   findAll() {

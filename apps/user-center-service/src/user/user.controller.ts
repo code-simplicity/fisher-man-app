@@ -8,17 +8,25 @@ import {
   Delete,
   UnauthorizedException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiOperation } from '@app/decorator';
 import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { MessagePattern } from '@nestjs/microservices';
 import { UserConstants } from '@app/common';
 import { User } from './entities';
 import { AuthGuard } from '@nestjs/passport';
+import { UserEmailDto } from '@apps/user-center-service/email/dto/user-email.dto';
 
 @ApiTags('用户中心')
 @Controller('ucenter/user/')

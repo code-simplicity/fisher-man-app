@@ -12,6 +12,8 @@ import * as redisStore from 'cache-manager-redis-store';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from '../logger';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 /**
  * 全局模块配置
@@ -24,6 +26,7 @@ export interface GlobalModuleOptions {
   cache?: boolean; // 开启缓存
   txOSS?: boolean; // 开启腾讯云对象存储
   throttler?: boolean; // 开启接口限速
+  email?: boolean; // 开启邮箱注册
 }
 
 /**
@@ -41,6 +44,7 @@ export class GlobalModule {
       cache,
       txOSS,
       throttler,
+      email,
     } = options || {};
 
     // 导入动态模块
@@ -162,6 +166,26 @@ export class GlobalModule {
         }),
         global: true,
       });
+    }
+
+    // 开启邮箱
+    if (email) {
+      imports.push(
+        MailerModule.forRootAsync({
+          useFactory: (configService: ConfigService) => {
+            const { QQ, WY } = configService.get('email');
+            const template = {
+              dir: join(process.cwd(), '/apps/libs/common/src/template/'), // 模板
+              adapter: new EjsAdapter(),
+              options: {
+                strict: true, //严格模式
+              },
+            };
+            return { ...QQ, ...template };
+          },
+          inject: [ConfigService],
+        }),
+      );
     }
 
     return {
