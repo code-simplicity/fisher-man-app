@@ -1,1 +1,26 @@
 # 文件上传配置
+
+# 上传文件路径
+uploadPath: fisher-uploads
+
+# 上传文件的静态服务器
+uploadHost: http://localhost:5010/
+
+# 文件配置类型
+fileLimit:
+  image:
+    name: 图片
+    maxSizeMB: 5
+    suffixes: [jpg, png, jpeg, gif, ico]
+  video:
+    name: 视频
+    maxSizeMB: 100
+    suffixes: [mp4, webm]
+  audio:
+    name: 音频
+    maxSizeMB: 30
+    suffixes: [mp3]
+  document:
+    name: 文件
+    maxSizeMB: 50
+    suffixes: [doc, docx, ppt, pptx, xls, xlsx, md, txt, json, js]

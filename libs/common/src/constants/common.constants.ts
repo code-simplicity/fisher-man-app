@@ -26,4 +26,17 @@ export const UserConstants = {
   FISHER_COOKIE_KEY: 'fisher_cookie_key_',
   // 邮箱验证码的key
   FISHER_EMAIL_KEY: 'fisher_email_key_',
+  // 验证码的后缀
+  FISHER_VERIFY_KEY: 'fisher_verify_key_',
+  // 验证码配置
+  CAPTCHA_OPTION: {
+    size: 6, // 数字长度
+    ignoreChars: '0o1i', // 忽略字符串
+    noise: 1, // 干扰线
+    fontSize: 34, // 字体大小
+    width: 120, // 宽度
+    height: 34, // 高度
+    color: true,
+    // background: '#cc9966',
+  },
 };

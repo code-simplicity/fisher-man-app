@@ -38,3 +38,5 @@ lerna-debug.log*
 config/application.dev.yaml
 config/application.prod.yaml
 config/config.tx.yaml
+
+fisher-uploads

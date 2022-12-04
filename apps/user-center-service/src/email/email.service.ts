@@ -3,6 +3,8 @@ import { UserEmailDto } from '@apps/user-center-service/email/dto/user-email.dto
 import { LoggerService, UserConstants } from '@app/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { Cache } from 'cache-manager';
+import * as SvgCaptcha from 'svg-captcha';
+import * as RequestIp from 'request-ip';
 
 @Injectable()
 export class EmailService {
@@ -20,7 +22,7 @@ export class EmailService {
     try {
       // 首先判断邮箱验证码是否过期，如果没有过期并且是存在多次请求的，提示相关警告，避免频繁发送垃圾邮件
       const emailKey = await this.cacheManager.get(
-        `${userEmailDto.email}-${UserConstants.FISHER_EMAIL_KEY}`,
+        `${UserConstants.FISHER_EMAIL_KEY}${userEmailDto.email}`,
       );
       this.loggerService.log(emailKey, '邮箱验证码');
       if (emailKey)
@@ -71,7 +73,7 @@ export class EmailService {
       this.loggerService.log({ code, date, sendEmailOptions }, '邮箱验证码');
       // 存入缓存
       await this.cacheManager.set(
-        `${userEmailDto.email}-${UserConstants.FISHER_EMAIL_KEY}`,
+        `${UserConstants.FISHER_EMAIL_KEY}${userEmailDto.email}`,
         code,
         60 * 30,
       );
@@ -80,5 +82,28 @@ export class EmailService {
       this.loggerService.error(error, '发送邮件错误');
       return error;
     }
+  }
+
+  /**
+   * 获取图灵验证码
+   */
+  async getVerifyCode(req, res) {
+    // 获取客户端ip
+    const clientIp = RequestIp.getClientIp(req);
+    // 配置svg图片
+    const captcha = SvgCaptcha.create({
+      ...UserConstants.CAPTCHA_OPTION,
+    });
+    // 存入数值到缓存
+    // 这里使用的是用户请求的ip地址，
+    await this.cacheManager.set(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+      captcha.text,
+      60 * 30,
+    );
+    //指定返回的类型
+    res.type('image/svg+xml');
+    //给页面返回一张图片
+    return res.send(captcha.data);
   }
 }

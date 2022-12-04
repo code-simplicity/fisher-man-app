@@ -11,9 +11,9 @@ export class UserEmailDto {
   @IsString()
   email: string;
 
-  @ApiProperty('描述', { example: '用户注册' })
+  @ApiProperty('描述', { example: '用户注册', required: false })
   subject?: string;
 
-  @ApiProperty('签名', { example: '签名' })
+  @ApiProperty('签名', { example: '签名', required: false })
   sign?: string;
 }

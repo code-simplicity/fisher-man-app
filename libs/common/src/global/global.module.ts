@@ -1,12 +1,16 @@
 import { ClientsModule } from '@nestjs/microservices';
 import { AllExceptionFilter, rootPath, TransformInterceptor } from '@app/tool';
-import { CacheModule, DynamicModule, Module } from '@nestjs/common';
+import {
+  CacheModule,
+  DynamicModule,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync } from 'fs';
 import { load } from 'js-yaml';
 import { cloneDeepWith, merge } from 'lodash';
-import { join } from 'path';
-import { ValidationPipe } from '@nestjs/common';
+import { extname, join } from 'path';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import * as redisStore from 'cache-manager-redis-store';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +18,13 @@ import { LoggerModule } from '../logger';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import { TxOssModule } from '@app/common/txOss';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as dayjs from 'dayjs';
+import * as nuid from 'nuid';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { UploadModule } from '@app/common/upload';
 
 /**
  * 全局模块配置
@@ -127,10 +138,7 @@ export class GlobalModule {
           microservice.map((name) => ({
             name,
             useFactory: (configService: ConfigService) => {
-              const microserviceClient = configService.get(
-                `microserviceClients.${name}`,
-              );
-              return microserviceClient;
+              return configService.get(`microserviceClients.${name}`);
             },
             inject: [ConfigService],
           })),
@@ -182,6 +190,84 @@ export class GlobalModule {
               },
             };
             return { ...QQ, ...template };
+          },
+          inject: [ConfigService],
+        }),
+      );
+    }
+
+    // 开启腾讯云对象存储
+    if (txOSS) {
+      imports.push(
+        TxOssModule.forRoot({
+          isGlobal: true,
+          useFactory: (configService: ConfigService) => {
+            const uploadPath = configService.get('uploadPath');
+            const fileLimit = configService.get('fileLimit');
+            const tx = configService.get('tx');
+            const oss = configService.get('oss');
+            return {
+              uploadPath,
+              fileLimit,
+              ...tx,
+              ...oss,
+            };
+          },
+          inject: [ConfigService],
+        }),
+      );
+    }
+
+    // 开启文件上传
+    if (upload) {
+      imports.push(
+        {
+          ...MulterModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => {
+              // 文件路径
+              let path = configService.get('uploadPath');
+              path = join(rootPath, path);
+              existsSync(path) || mkdirSync(path);
+              return {
+                // 文件存储
+                storage: diskStorage({
+                  // 确定存储位置
+                  destination: (_req, _file, cb) => {
+                    // 日期
+                    const day = dayjs().format('YYYY-MM-DD');
+                    // 文件夹
+                    const folder = `${path}/${day}`;
+                    // 查询文件夹是否存在，不存在就创建
+                    existsSync(folder) || mkdirSync(folder);
+                    cb(null, folder);
+                  },
+                  // 文件名
+                  filename: (_req, { originalname }, cb) => {
+                    return cb(null, nuid.next() + extname(originalname));
+                  },
+                }),
+              };
+            },
+            inject: [ConfigService],
+          }),
+          global: true,
+        },
+        ServeStaticModule.forRootAsync({
+          useFactory: (configService: ConfigService) => {
+            // 文件路径
+            const path = configService.get('uploadPath');
+            return [
+              { rootPath: join(rootPath, path), exclude: ['/api/:path*'] },
+            ];
+          },
+          inject: [ConfigService],
+        }),
+        UploadModule.forRoot({
+          isGlobal: true,
+          useFactory: (configService: ConfigService) => {
+            const fileLimit = configService.get('fileLimit');
+            return { fileLimit };
           },
           inject: [ConfigService],
         }),

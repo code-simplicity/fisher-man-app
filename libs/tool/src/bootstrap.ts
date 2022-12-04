@@ -30,6 +30,9 @@ export const bootstrap = async (
   // 创建一个服务
   const app = await NestFactory.create<INestApplication>(module, options);
 
+  // 开启跨域访问
+  app.enableCors();
+
   //   服务执行之前
   before?.(app);
 
@@ -58,7 +61,7 @@ export const bootstrap = async (
     });
 
     // 启动所有微服务
-    app.startAllMicroservices();
+    await app.startAllMicroservices();
   }
 
   // swagger文档

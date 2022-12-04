@@ -18,6 +18,8 @@ import { EmailModule } from './email/email.module';
       cache: true,
       throttler: true, // 开启接口限速
       email: true,
+      upload: true,
+      txOSS: true,
     }),
     UserModule,
     UserInfoModule,
