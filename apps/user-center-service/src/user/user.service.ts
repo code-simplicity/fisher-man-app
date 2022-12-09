@@ -14,7 +14,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities';
 import { TransformInstanceToPlain } from 'class-transformer';
 import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
-import { LoggerService } from '@app/common';
+import { LoggerService, UserConstants } from '@app/common';
 import { keys } from 'lodash';
 import { encryptPassword, makeSalt } from '@app/common/utils/cryptogram.util';
 import { Cache } from 'cache-manager';
@@ -116,6 +116,18 @@ export class UserService {
    */
   async sendEmilaCode(userEmailDto: UserEmailDto) {
     // 实现邮箱的集成
+  }
+
+  /**
+   * 获取初始化头像
+   */
+  async initUserAvatar() {
+    const avatar = UserConstants.DEFAULT_AVATAR;
+    if (avatar) {
+      return {
+        avatarUrl: avatar,
+      };
+    }
   }
 
   findAll() {

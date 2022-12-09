@@ -77,6 +77,12 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('init/avatar')
+  @ApiOperation('获取用户初始化头像')
+  initUserAvatar() {
+    return this.userService.initUserAvatar();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);

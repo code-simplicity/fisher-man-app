@@ -9,6 +9,8 @@ import { LoginRecordModule } from './login-record/login-record.module';
 import { RoleModule } from './role/role.module';
 import { ServiceConfigModule } from './service-config/service-config.module';
 import { EmailModule } from './email/email.module';
+import { UploadController } from '@app/common/upload/upload.controller';
+import { TxOssController } from '@app/common/txOss/tx-oss.controller';
 
 @Module({
   imports: [
@@ -31,5 +33,6 @@ import { EmailModule } from './email/email.module';
     ServiceConfigModule,
     EmailModule,
   ],
+  controllers: [UploadController, TxOssController],
 })
 export class UserCenterServiceModule {}
