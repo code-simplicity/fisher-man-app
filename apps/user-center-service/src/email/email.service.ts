@@ -5,6 +5,7 @@ import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { Cache } from 'cache-manager';
 import * as SvgCaptcha from 'svg-captcha';
 import * as RequestIp from 'request-ip';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class EmailService {
@@ -25,8 +26,7 @@ export class EmailService {
         `${UserConstants.FISHER_EMAIL_KEY}${userEmailDto.email}`,
       );
       this.loggerService.log(emailKey, '邮箱验证码');
-      if (emailKey)
-        return { message: '邮箱验证码没有过期，请勿频繁发送邮箱验证码' };
+      // 判断当前的ip是否频繁发送邮箱验证码，如果是那么就禁用掉
       // 生成六位数的随机邮箱验证码
       const code = Math.random().toString().slice(2, 8);
       const date = new Date();
@@ -87,9 +87,10 @@ export class EmailService {
   /**
    * 获取图灵验证码
    */
-  async getVerifyCode(req, res) {
+  async getVerifyCode(req: Request, res: Response) {
     // 获取客户端ip
     const clientIp = RequestIp.getClientIp(req);
+    console.log('Request clientIp ==>', clientIp);
     // 配置svg图片
     const captcha = SvgCaptcha.create({
       ...UserConstants.CAPTCHA_OPTION,
@@ -101,9 +102,10 @@ export class EmailService {
       captcha.text,
       60 * 30,
     );
-    //指定返回的类型
-    res.type('image/svg+xml');
+    res.setHeader('Content-Type', 'text/html');
+    // //指定返回的类型
+    res.type('svg');
     //给页面返回一张图片
-    return res.send(captcha.data);
+    res.send(captcha.data);
   }
 }

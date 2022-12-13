@@ -1,5 +1,5 @@
 import { Entity } from 'typeorm';
-import { CommonEntity } from '@app/common';
+import { CommonEntity, UserConstants } from '@app/common';
 import { ApiProperty, Column } from '@app/decorator';
 
 /**
@@ -12,7 +12,7 @@ export class Token extends CommonEntity {
   userId: string;
 
   @ApiProperty('刷新token')
-  @Column('刷新token', 128, { name: 'refresh_token' })
+  @Column('刷新token', 1024, { name: 'refresh_token' })
   refreshToken: string;
 
   @ApiProperty('token的key值')
@@ -20,10 +20,15 @@ export class Token extends CommonEntity {
   tokenKey: string;
 
   @ApiProperty('登陆来源')
-  @Column('登陆来源', 10, { name: 'login_from' })
+  @Column('登陆来源', null, {
+    type: 'enum',
+    enum: UserConstants.LOGIN_FROM,
+    default: UserConstants.LOGIN_FROM.PC,
+    name: 'login_from',
+  })
   loginFrom: string;
 
   @ApiProperty('应用id')
-  @Column('应用id', 10, { name: 'app_id' })
+  @Column('应用id', 36, { name: 'app_id' })
   appId: string;
 }

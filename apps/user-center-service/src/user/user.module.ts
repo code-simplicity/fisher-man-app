@@ -6,9 +6,11 @@ import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserInfoModule } from '../user-info/user-info.module';
 import { JwtStrategy } from '@app/common/jwtAuth/jwt.strategy';
+import { TokenModule } from '@apps/user-center-service/token/token.module';
+import { JwtAuthModule } from '@app/common';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), UserInfoModule],
+  imports: [TypeOrmModule.forFeature([User]), UserInfoModule, TokenModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],

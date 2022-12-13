@@ -26,8 +26,10 @@ export class JwtAuthModule {
         PassportModule,
         {
           ...JwtModule.registerAsync({
-            useFactory: async (configService: ConfigService) => {
+            useFactory: (configService: ConfigService) => {
               const { secret, expiresIn } = configService.get('jwt');
+              console.log('secret', secret);
+              console.log('expiresIn', expiresIn);
               // 返回验证信息以及过期时间
               return { secret, signOptions: { expiresIn } };
             },
@@ -36,8 +38,12 @@ export class JwtAuthModule {
           global: true,
         },
       ],
-      providers: [LocalStrategy({ token, pattern }), JwtStrategy({ picks })],
-      exports: [],
+      providers: [
+        LocalStrategy({ token, pattern }),
+        JwtStrategy({ picks }),
+        JwtAuthModule,
+      ],
+      exports: [JwtAuthModule],
     };
   }
 }

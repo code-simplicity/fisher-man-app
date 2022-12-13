@@ -9,9 +9,11 @@ import {
   UnauthorizedException,
   UseGuards,
   Query,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserLoginDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
@@ -21,12 +23,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ApiOperation } from '@app/decorator';
-import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { MessagePattern } from '@nestjs/microservices';
 import { UserConstants } from '@app/common';
 import { User } from './entities';
 import { AuthGuard } from '@nestjs/passport';
 import { UserEmailDto } from '@apps/user-center-service/email/dto/user-email.dto';
+import { Request, Response } from 'express';
 
 @ApiTags('用户中心')
 @Controller('ucenter/user/')
@@ -40,8 +42,8 @@ export class UserController {
   // @ApiConsumes('application/json', 'multipart/form-data')
   @ApiOperation('用户注册')
   @ApiResponse({ status: 200, type: CreateUserDto })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
+  async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
+    return await this.userService.createUser(request, createUserDto);
   }
 
   @Post('login')
@@ -50,15 +52,12 @@ export class UserController {
     type: UserLoginDto,
   })
   @ApiOperation(`用户登录`)
-  async login(@Body() userLoginDto: UserLoginDto) {
-    return this.userService.login(userLoginDto, (userOne: User) => {
-      // 判断用户的状态，用户失效返回具体的状态值
-      if (userOne.status !== '1') {
-        throw new UnauthorizedException(
-          `${UserConstants.USER_STATE[userOne.status]}`,
-        );
-      }
-    });
+  async login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Body() userLoginDto: UserLoginDto,
+  ) {
+    return await this.userService.login(req, res, userLoginDto);
   }
 
   /**

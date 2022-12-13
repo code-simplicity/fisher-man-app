@@ -128,7 +128,13 @@ DROP TABLE IF EXISTS `uc_settings`;
 CREATE TABLE `uc_settings` (
   `id` varchar(36) NOT NULL COMMENT 'ID',
   `key` varchar(64) DEFAULT NULL COMMENT '键',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户id',
   `value` varchar(128) DEFAULT NULL COMMENT '值',
+  `language` varchar(128) DEFAULT NULL COMMENT '多语言配置',
+  `theme_color` varchar(128) DEFAULT NULL COMMENT '主题色',
+  `font_size` integer DEFAULT NULL COMMENT '字体大小',
+  `border_radius` integer DEFAULT NULL COMMENT '圆角大小',
+  `status` varchar(10) DEFAULT NULL COMMENT '设置状态',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)

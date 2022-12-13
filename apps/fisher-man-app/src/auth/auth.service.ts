@@ -37,6 +37,7 @@ export class AuthService {
    */
   async createToken(response: Response, user: User, ttl: number) {
     const { username, id, salt } = user;
+    console.log('user ==>', user);
     // token是由盐+用户的信息，比如用户
     // 创建tokenKey
     const tokenKey = UserConstants.TOKEN_KEY + salt;
@@ -76,9 +77,10 @@ export class AuthService {
    * 登陆模块
    * @param req
    */
-  async login(req: any, response: Response) {
+  async login(req: any, response: Response, user) {
     // 获取用户信息
-    const { user, clientIp: clientIp } = req;
+    const { clientIp: clientIp } = req;
+    console.log('user ===>', user);
     const ttl = parseInt(this.configService.get('jwt.expiresIn'));
     // 登陆校验成功时候创建token
     const access_token = await this.createToken(response, user, ttl);

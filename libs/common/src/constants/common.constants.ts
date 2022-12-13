@@ -31,12 +31,33 @@ export const UserConstants = {
   // 验证码配置
   CAPTCHA_OPTION: {
     size: 6, // 数字长度
-    ignoreChars: '0o1i', // 忽略字符串
+    ignoreChars: '0oO1ilI', // 忽略字符串
     noise: 1, // 干扰线
-    fontSize: 34, // 字体大小
+    fontSize: 42, // 字体大小
     width: 120, // 宽度
     height: 34, // 高度
     color: true,
     // background: '#cc9966',
+  },
+  LOGIN_FROM: {
+    PC: 'PC', // pc
+    ANDROID: 'Android', // 安卓
+    IOS: 'IOS', // ios
+    LINUX: 'LINUX', // Linux
+  },
+};
+
+/**
+ * 常用设置数据
+ */
+export const AppSettingConstants = {
+  DEFAULT: {
+    userId: '',
+    language: 'zhCN',
+    themeColor: '#ec14c9',
+    fontSize: 14,
+    borderRadius: 4,
+    key: 'default',
+    value: '',
   },
 };

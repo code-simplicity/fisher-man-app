@@ -47,7 +47,7 @@ export class TokenController {
   @MessagePattern('Token.create')
   @ApiOperation('创建token')
   createToken(@Body() createTokenDto: CreateTokenDto) {
-    return this.tokenService.createToken(createTokenDto);
+    return this.tokenService.saveToken(createTokenDto);
   }
 
   @Delete(':userId')

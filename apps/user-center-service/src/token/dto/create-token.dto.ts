@@ -8,15 +8,23 @@ export class CreateTokenDto {
   @ApiProperty('用户id', { example: '1' })
   @IsNotEmpty('用户id')
   @IsString()
-  userId: string;
+  userId?: string;
 
   @ApiProperty('刷新的token', { example: '1211122' })
   @IsNotEmpty('刷新的token')
   @IsString()
-  refreshToken: string;
+  refreshToken?: string;
 
   @ApiProperty('token的Key', { example: '1211122' })
   @IsNotEmpty('token的Key')
   @IsString()
-  tokenKey: string;
+  tokenKey?: string;
+
+  @ApiProperty('登录来自哪里', { example: '1211122' })
+  @IsNotEmpty('登录来自哪里')
+  loginFrom?: string;
+
+  @ApiProperty('登录来自哪里', { example: '1211122' })
+  @IsNotEmpty('登录来自哪里')
+  appId?: string;
 }

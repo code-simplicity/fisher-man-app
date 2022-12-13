@@ -5,20 +5,24 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserLoginDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities';
 import { TransformInstanceToPlain } from 'class-transformer';
-import { UserLoginDto } from '../../../fisher-man-app/src/auth/dto/auth.dto';
 import { LoggerService, UserConstants } from '@app/common';
 import { keys } from 'lodash';
 import { encryptPassword, makeSalt } from '@app/common/utils/cryptogram.util';
 import { Cache } from 'cache-manager';
 import { UserEmailDto } from '@apps/user-center-service/email/dto/user-email.dto';
+import { TokenService } from '@apps/user-center-service/token/token.service';
+import * as RequestIp from 'request-ip';
+import { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -28,6 +32,8 @@ export class UserService {
     private readonly loggerService: LoggerService,
     private readonly userInfoService: UserInfoService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    private readonly tokenService: TokenService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -35,14 +41,24 @@ export class UserService {
    * @param createUserDto
    * @returns
    */
-  async createUser(createUserDto: CreateUserDto) {
-    const { username, email, password } = createUserDto;
+  async createUser(req: Request, createUserDto: CreateUserDto) {
+    const { username, email, password, emailCode, captcha } = createUserDto;
+    // 获取客户端ip
+    const clientIp = RequestIp.getClientIp(req);
     // 判断用户是否存在
     await this.isUserExists(username);
     // 判断邮箱是否被注册
     await this.userInfoService.isEmailExists(email);
     // 需要使用到邮箱验证码
-    // 包括图灵验证码
+    await this.isEmailCodeExists(email, emailCode);
+    // 验证图灵验证码是否正确
+    const captchaCacheKey: string = await this.cacheManager.get(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+    );
+    // 统一进行验证码的字符串大小写化
+    if (captcha.toLowerCase() !== captchaCacheKey.toLowerCase()) {
+      throw new BadRequestException('图灵验证码不正确，请检查并重试！！！');
+    }
     // 通过bcryptjs加密库创建盐值
     const salt = makeSalt();
     // 密码进行hash
@@ -53,6 +69,7 @@ export class UserService {
       password: hashPassword,
       salt,
     };
+
     // 保存用户信息
     const userResult = await this.userRepository.save(user);
     // 判断用户是否插入
@@ -64,9 +81,24 @@ export class UserService {
       email: email,
     };
     await this.userInfoService.createUserInfo(userInfo);
-    // 创建token，保存
-    // 保存用户到用户表
-    return userResult;
+    // 删除邮箱验证码
+    await this.cacheManager.del(`${UserConstants.FISHER_EMAIL_KEY}${email}`);
+    // 删除图灵验证码
+    await this.cacheManager.del(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+    );
+    // 返回信息
+    return {
+      id: userResult.id,
+      username: userResult.username,
+      email: userResult.email,
+      phone: userResult.phone,
+      avatar: userResult.avatar,
+      lev: userResult.lev,
+      status: userResult.status,
+      createTime: userResult.createTime,
+      updateTime: userResult.updateTime,
+    };
   }
 
   /**
@@ -75,12 +107,15 @@ export class UserService {
    * @param password 密码
    * @param validatorUser 验证用户，用户被拉黑或者没有审批通过抛出异常
    */
+  // TODO:实现登录签发
   @TransformInstanceToPlain()
   async login(
-    { username, password }: UserLoginDto,
-    validatorUser?: (_Entity: User) => void,
+    req: Request,
+    res: Response,
+    { username, password, captcha }: UserLoginDto,
   ) {
-    // 判断token是否存在，如果存在那就直接返回用户信息，过期就进行登录
+    // 获取客户端ip
+    const clientIp = RequestIp.getClientIp(req);
     // 通过用户名查询到返回数据
     const userOne = await this.userRepository
       .createQueryBuilder('uc_user')
@@ -89,15 +124,34 @@ export class UserService {
       .where('uc_user.username = :username', { username })
       .getOne();
     if (!userOne) throw new NotFoundException('用户不存在');
+    if (userOne.status !== '1') {
+      throw new UnauthorizedException(
+        `${UserConstants.USER_STATE[userOne.status]}`,
+      );
+    }
     const { salt, password: dbPassword } = userOne;
     // 获取当前的hash密码与数据库中的进行对比
     const currentHashPassword = encryptPassword(password, salt);
     if (currentHashPassword !== dbPassword) {
       throw new BadRequestException('密码不正确');
     }
-    // 生成token
-    // 存在并且密码正确
-    validatorUser?.(userOne);
+    const fisherVerifyKey: string = await this.cacheManager.get(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+    );
+    if (fisherVerifyKey?.toLowerCase() !== captcha?.toLowerCase()) {
+      throw new BadRequestException('图灵验证码不正确');
+    }
+    // 获取token
+    const refreshToken = await this.tokenService.getRefreshToken(userOne);
+    // 创建一个token，当token不存在的时候
+    if (!refreshToken) {
+      await this.tokenService.createUserToken(req, res, userOne);
+    } else {
+      // token存在直接返回token，验证登录
+      return refreshToken;
+    }
+    // 更新图灵验证码
+    // 判断token是否存在，如果存在那就直接返回用户信息，过期就进行登录
     return userOne;
   }
 
@@ -160,5 +214,17 @@ export class UserService {
       },
     });
     if (user) throw new BadRequestException('用户名已经存在');
+  }
+
+  /**
+   * 验证邮箱验证码是否过期
+   * @param email
+   * @param emailCode
+   */
+  async isEmailCodeExists(email: string, emailCode: string) {
+    const result: string = await this.cacheManager.get(
+      `${UserConstants.FISHER_EMAIL_KEY}${email}`,
+    );
+    if (emailCode !== result) throw new BadRequestException('邮箱验证码不正确');
   }
 }

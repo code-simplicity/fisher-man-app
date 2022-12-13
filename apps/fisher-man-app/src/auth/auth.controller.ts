@@ -5,6 +5,7 @@ import { ApiOperation } from '@app/decorator';
 import { LoginUserInfoDto, UserInfoDto, UserLoginDto } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
+import { User } from '@apps/user-center-service/user/entities';
 
 /**
  * 鉴权控制器
@@ -19,8 +20,12 @@ export class AuthController {
   @ApiBody({ type: UserLoginDto })
   @ApiResponse({ status: 200, type: LoginUserInfoDto })
   @ApiOperation('用户登陆')
-  login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.login(req, res);
+  login(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    user: User,
+  ) {
+    return this.authService.login(req, res, user);
   }
 
   @Get('user/info')

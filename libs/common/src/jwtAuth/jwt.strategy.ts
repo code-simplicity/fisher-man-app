@@ -9,7 +9,7 @@ export interface JwtStrategyType {
    * 提取用户信息，每次请求都能得到
    * 不可填ID，在 this.jwtService.sign 时需要与之对应
    */
-  picks: string[];
+  picks?: string[];
 }
 
 /**

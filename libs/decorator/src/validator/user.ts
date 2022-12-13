@@ -10,7 +10,7 @@ export const ValidatorUser = {
   // 用户名验证
   USERNAME: Matches(
     /^[a-zA-Z\u4E00-\u9FA5][a-zA-Z0-9\u4E00-\u9FA5_-]{3,32}$/,
-    '请输入复核格式要求的用户名，4-32位、字母、数字、下划线、减号、汉字',
+    '请输入符合格式要求的用户名，4-32位、字母、数字、下划线、减号、汉字',
   ),
   // 密码
   PASSWORD: Matches(

@@ -1,4 +1,4 @@
-import { GlobalModule, JwtAuthModule } from '@app/common';
+import { GlobalModule } from '@app/common';
 import { Module } from '@nestjs/common';
 import { AppModule } from './app/app.module';
 import { SettingsModule } from './settings/settings.module';
@@ -16,6 +16,7 @@ import { TxOssController } from '@app/common/txOss/tx-oss.controller';
   imports: [
     GlobalModule.forRoot({
       yamlFilePath: ['apps/user-center-service.yaml'],
+      microservice: ['USER_CENTER_SERVICE'], // 微服务名称
       typeorm: true,
       cache: true,
       throttler: true, // 开启接口限速

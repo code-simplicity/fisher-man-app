@@ -6,8 +6,8 @@ import { lastValueFrom, timeout } from 'rxjs';
 import { response } from 'express';
 
 export interface LocalStrategyType {
-  token: string; // 需要验证策略的服务
-  pattern: string; // 鉴权的微服务接口
+  token?: string; // 需要验证策略的服务
+  pattern?: string; // 鉴权的微服务接口
 }
 
 /**
