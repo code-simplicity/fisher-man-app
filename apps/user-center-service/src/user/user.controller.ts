@@ -41,6 +41,7 @@ import { Request, Response } from 'express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard('local'))
   @Post('register')
   @ApiBody({
     type: CreateUserDto,
@@ -93,12 +94,14 @@ export class UserController {
     return this.userService.initUserAvatar();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('init/admin')
   @ApiBody({
     type: InitAdminDto,
   })
   @ApiConsumes('application/json', 'multipart/form-data')
   @ApiOperation('初始化管理员')
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: InitAdminDto })
   async initAdmin(@Body() initAdminDto: InitAdminDto) {
     return await this.userService.initAdmin(initAdminDto);

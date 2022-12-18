@@ -115,7 +115,6 @@ export class UserService {
    * @param password 密码
    * @param validatorUser 验证用户，用户被拉黑或者没有审批通过抛出异常
    */
-  // TODO:实现登录签发
   @TransformInstanceToPlain()
   async login(
     req: Request,
