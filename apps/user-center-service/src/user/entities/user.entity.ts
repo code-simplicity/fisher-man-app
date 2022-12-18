@@ -1,4 +1,4 @@
-import { CommonEntity } from '@app/common';
+import { CommonEntity, UserConstants } from '@app/common';
 import { ApiProperty, Column } from '@app/decorator';
 import { Exclude } from 'class-transformer';
 import { Entity } from 'typeorm';
@@ -18,6 +18,7 @@ export class User extends CommonEntity {
   password: string;
 
   @ApiProperty('盐值')
+  @Exclude() // 返回的时候过滤掉盐
   @Column('盐值', 32)
   salt: string;
 
@@ -26,22 +27,38 @@ export class User extends CommonEntity {
   lev: string;
 
   @ApiProperty('性别')
-  @Column('性别', 10)
+  @Column('性别', null, {
+    type: 'enum',
+    enum: UserConstants.USER_SEX,
+    default: UserConstants.USER_SEX.UNKNOWN, // 默认未知
+  })
   sex: string;
 
   @ApiProperty('头像地址')
-  @Column('头像地址', 512)
+  @Column('头像地址', 512, {
+    default: UserConstants.DEFAULT_AVATAR,
+  })
   avatar: string;
 
   @ApiProperty('签名')
-  @Column('签名', 256)
+  @Column('签名', 256, {
+    nullable: true,
+  })
   sign: string;
 
   @ApiProperty('删除标识')
-  @Column('删除标识', 1, { default: '0' })
-  deleted: string;
+  @Column('删除标识', null, {
+    type: 'enum',
+    enum: UserConstants.USER_DELETED,
+    default: UserConstants.USER_DELETED.UNDELETE, // 默认未删除
+  })
+  deleted: number;
 
   @ApiProperty('状态')
-  @Column('状态', 10, { default: '0' })
-  status: string;
+  @Column('状态', null, {
+    type: 'enum',
+    enum: UserConstants.USER_STATE_ENUM,
+    default: UserConstants.USER_STATE_ENUM.NOT_ACTIVATE, // 默认未激活
+  })
+  status: number;
 }

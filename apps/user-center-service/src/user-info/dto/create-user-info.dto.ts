@@ -1,5 +1,4 @@
 import { IsString } from 'class-validator';
-import { CommonEntity } from '@app/common';
 
 // 创建用户信息的dto
 export class CreateUserInfoDto {
@@ -8,4 +7,6 @@ export class CreateUserInfoDto {
 
   @IsString()
   email: string;
+
+  phoneNum?: string;
 }

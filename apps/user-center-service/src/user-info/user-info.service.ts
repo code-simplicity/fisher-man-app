@@ -5,6 +5,7 @@ import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { UserInfo } from './entities';
 import { result } from 'lodash';
+import { UserConstants } from '@app/common';
 
 @Injectable()
 export class UserInfoService {
@@ -15,6 +16,7 @@ export class UserInfoService {
 
   /**
    * 保存用户到用户信息表
+   * @param createUserInfoDto
    */
   async createUserInfo(createUserInfoDto: CreateUserInfoDto) {
     return await this.userInfoRepository.save(createUserInfoDto);

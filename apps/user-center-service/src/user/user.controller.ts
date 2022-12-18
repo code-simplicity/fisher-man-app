@@ -15,6 +15,7 @@ import {
 import { UserService } from './user.service';
 import {
   CreateUserDto,
+  InitAdminDto,
   UserForgetPasswordDto,
   UserLoginDto,
 } from './dto/create-user.dto';
@@ -22,6 +23,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -43,11 +45,11 @@ export class UserController {
   @ApiBody({
     type: CreateUserDto,
   })
-  // @ApiConsumes('application/json', 'multipart/form-data')
+  @ApiConsumes('application/json', 'multipart/form-data')
   @ApiOperation('用户注册')
   @ApiResponse({ status: 200, type: CreateUserDto })
-  async create(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
-    return await this.userService.createUser(request, createUserDto);
+  async create(@Req() req: Request, @Body() createUserDto: CreateUserDto) {
+    return await this.userService.createUser(req, createUserDto);
   }
 
   @Post('login')
@@ -55,7 +57,7 @@ export class UserController {
   @ApiBody({
     type: UserLoginDto,
   })
-  @ApiOperation(`用户登录`)
+  @ApiOperation('用户登录')
   async login(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -85,31 +87,20 @@ export class UserController {
     return await this.userService.forgetPassword(req, forgetPasswordDto);
   }
 
-  @Get()
-  @ApiBearerAuth() // 鉴权
-  @UseGuards(AuthGuard('jwt')) // 路由守卫
-  findAll() {
-    return this.userService.findAll();
-  }
-
   @Get('init/avatar')
   @ApiOperation('获取用户初始化头像')
-  initUserAvatar() {
+  async initUserAvatar() {
     return this.userService.initUserAvatar();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Post('init/admin')
+  @ApiBody({
+    type: InitAdminDto,
+  })
+  @ApiConsumes('application/json', 'multipart/form-data')
+  @ApiOperation('初始化管理员')
+  @ApiResponse({ status: 200, type: InitAdminDto })
+  async initAdmin(@Body() initAdminDto: InitAdminDto) {
+    return await this.userService.initAdmin(initAdminDto);
   }
 }

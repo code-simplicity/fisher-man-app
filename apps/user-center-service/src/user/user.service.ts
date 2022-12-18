@@ -5,6 +5,8 @@ import {
   CACHE_MANAGER,
   Inject,
   Injectable,
+  NotAcceptableException,
+  InternalServerErrorException,
   NotFoundException,
   Req,
   UnauthorizedException,
@@ -13,6 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
   CreateUserDto,
+  InitAdminDto,
   UserForgetPasswordDto,
   UserLoginDto,
 } from './dto/create-user.dto';
@@ -129,10 +132,16 @@ export class UserService {
       .where('uc_user.username = :username', { username })
       .getOne();
     if (!userOne) throw new NotFoundException('用户不存在');
-    if (userOne.status !== '1') {
-      throw new UnauthorizedException(
-        `${UserConstants.USER_STATE[userOne.status]}`,
-      );
+    if (
+      userOne.status !== UserConstants.USER_STATE_ENUM.COMMON ||
+      userOne.status !== UserConstants.USER_STATE_ENUM.ADMIN
+    ) {
+      // 进行状态的过滤
+      UserConstants.USER_STATE.forEach((item) => {
+        if (item.state === userOne.status) {
+          throw new UnauthorizedException(`${item.stateName}`);
+        }
+      });
     }
     const { salt, password: dbPassword } = userOne;
     // 获取当前的hash密码与数据库中的进行对比
@@ -213,33 +222,16 @@ export class UserService {
         salt,
       },
     );
-    // 不管更新成功没有，都删除图灵验证码和邮箱验证码
+    if (!result.affected) {
+      throw new InternalServerErrorException('修改失败');
+    }
     // 删除邮箱验证码
     await this.cacheManager.del(`${UserConstants.FISHER_EMAIL_KEY}${email}`);
     // 删除图灵验证码
     await this.cacheManager.del(
       `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
     );
-    return result;
-  }
-
-  findAll() {
-    console.log('User.name', User.name);
-    return {
-      list: `This action returns all user`,
-    };
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return null;
   }
 
   /**
@@ -267,5 +259,53 @@ export class UserService {
     if (!result)
       throw new BadRequestException('没有收到邮箱验证码，请重新发送');
     if (emailCode !== result) throw new BadRequestException('邮箱验证码不正确');
+  }
+
+  /**
+   * 初始化管理员
+   * @param initAdminDto
+   */
+  async initAdmin(initAdminDto: InitAdminDto) {
+    const { username, email, password, phone } = initAdminDto;
+    // 判断用户是否存在
+    await this.isUserExists(username);
+    // 判断邮箱是否被注册
+    await this.userInfoService.isEmailExists(email);
+    // 通过bcryptjs加密库创建盐值
+    const salt = makeSalt();
+    // 密码进行hash
+    const hashPassword = encryptPassword(password, salt);
+    // 创建用户
+    const user = {
+      ...initAdminDto,
+      password: hashPassword,
+      salt,
+      avatar: UserConstants.DEFAULT_AVATAR,
+      status: UserConstants.USER_STATE_ENUM.ADMIN,
+    };
+    // 保存管理员信息
+    const userResult = await this.userRepository.save(user);
+    // 判断用户是否插入
+    if (keys(userResult).length === 0)
+      throw new BadRequestException('用户保存失败');
+    // 保存用户到用户信息表
+    const userInfo = {
+      userId: userResult.id,
+      email: email,
+      phoneNum: phone,
+    };
+    await this.userInfoService.createUserInfo(userInfo);
+    // 返回信息
+    return {
+      id: userResult.id,
+      username: userResult.username,
+      email: userResult.email,
+      phone: userResult.phone,
+      avatar: userResult.avatar,
+      lev: userResult.lev,
+      status: userResult.status,
+      createTime: userResult.createTime,
+      updateTime: userResult.updateTime,
+    };
   }
 }

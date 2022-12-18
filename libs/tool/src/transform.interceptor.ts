@@ -78,11 +78,10 @@ export class TransformInterceptor<T>
       resNext = resNext.pipe(
         map((data) => {
           // 统一收集返回信息
-          const { message } = data;
           return {
             code: res.statusCode,
             data: data,
-            message: message || '请求成功',
+            message: '请求成功',
             success: true,
           };
         }),
