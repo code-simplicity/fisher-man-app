@@ -76,12 +76,16 @@ export class TransformInterceptor<T>
       Object.keys(body).length && this.loggerService.log(body, '请求参数');
       // 响应参数转化为统一格式
       resNext = resNext.pipe(
-        map((data) => ({
-          code: res.statusCode,
-          data,
-          message: '请求成功',
-          success: true,
-        })),
+        map((data) => {
+          // 统一收集返回信息
+          const { message } = data;
+          return {
+            code: res.statusCode,
+            data: data,
+            message: message || '请求成功',
+            success: true,
+          };
+        }),
       );
     }
     return resNext.pipe(

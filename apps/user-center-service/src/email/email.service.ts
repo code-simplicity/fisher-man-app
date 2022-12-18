@@ -77,7 +77,9 @@ export class EmailService {
         code,
         60 * 30,
       );
-      return {};
+      return {
+        message: '发送邮件成功',
+      };
     } catch (error) {
       this.loggerService.error(error, '发送邮件错误');
       return error;

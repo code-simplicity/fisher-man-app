@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { UserInfo } from './entities';
+import { result } from 'lodash';
 
 @Injectable()
 export class UserInfoService {
@@ -30,6 +31,24 @@ export class UserInfoService {
       },
     });
     if (result) throw new BadRequestException('该邮箱已被注册');
+  }
+
+  /**
+   * 获取用户信息
+   * @param email
+   */
+  async getUserInfoByEmail(email: string) {
+    // 通过邮箱获取用户信息
+    const userInfo = await this.userInfoRepository.findOne({
+      where: {
+        email,
+      },
+    });
+    if (userInfo) {
+      return userInfo;
+    } else {
+      throw new BadRequestException('该邮箱并未注册');
+    }
   }
 
   create(createUserInfoDto: CreateUserInfoDto) {

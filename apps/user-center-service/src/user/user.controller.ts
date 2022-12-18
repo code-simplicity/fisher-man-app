@@ -13,7 +13,11 @@ import {
   Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UserLoginDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  UserForgetPasswordDto,
+  UserLoginDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
@@ -67,6 +71,18 @@ export class UserController {
   @ApiOperation(`检查用户token`)
   async checkToken() {
     return await this.userService.checkToken();
+  }
+
+  @Post('forget/password')
+  @ApiBody({
+    type: UserForgetPasswordDto,
+  })
+  @ApiOperation('忘记密码')
+  async forgetPassword(
+    @Req() req: Request,
+    @Body() forgetPasswordDto: UserForgetPasswordDto,
+  ) {
+    return await this.userService.forgetPassword(req, forgetPasswordDto);
   }
 
   @Get()

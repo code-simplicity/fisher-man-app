@@ -1,6 +1,6 @@
 import { CommonEntity, UserConstants } from '@app/common';
 import { ApiProperty, IsNotEmpty, ValidatorUser } from '@app/decorator';
-import { IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
 export class VerifyCodeDto {
@@ -76,4 +76,34 @@ export class RefreshTokenDto extends CreateUserDto {
   salt?: string;
   tokenKey?: string;
   refreshToken?: string;
+}
+
+export class UserForgetPasswordDto {
+  @ApiProperty('密码', { example: '123456' })
+  @ValidatorUser.PASSWORD
+  @IsNotEmpty('密码')
+  password: string;
+
+  @ApiProperty('二次确认密码', { example: '123456' })
+  @ValidatorUser.PASSWORD
+  @IsNotEmpty('二次确认')
+  confirmPassword: string;
+
+  @ApiProperty('图灵验证码', { example: '123456' })
+  @IsNotEmpty('图灵验证码')
+  captcha: string;
+
+  @ApiProperty('邮箱', { example: 'dupyi0912@gmail.com' })
+  @IsNotEmpty('邮箱')
+  @IsEmail(
+    {},
+    {
+      message: '邮箱格式不正确哦',
+    },
+  )
+  email: string;
+
+  @ApiProperty('邮箱验证码', { example: '123456' })
+  @IsNotEmpty('邮箱验证码')
+  emailCode: string;
 }

@@ -1,6 +1,7 @@
 import { UserInfoService } from './../user-info/user-info.service';
 import {
   BadRequestException,
+  Body,
   CACHE_MANAGER,
   Inject,
   Injectable,
@@ -10,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UserLoginDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  UserForgetPasswordDto,
+  UserLoginDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities';
 import { TransformInstanceToPlain } from 'class-transformer';
@@ -165,14 +170,6 @@ export class UserService {
   }
 
   /**
-   * 发送邮箱验证码
-   * @param userEmailDto
-   */
-  async sendEmilaCode(userEmailDto: UserEmailDto) {
-    // 实现邮箱的集成
-  }
-
-  /**
    * 获取初始化头像
    */
   async initUserAvatar() {
@@ -182,6 +179,48 @@ export class UserService {
         avatarUrl: avatar,
       };
     }
+  }
+
+  async forgetPassword(req: Request, forgetPasswordDto: UserForgetPasswordDto) {
+    // 获取客户端ip
+    const clientIp = RequestIp.getClientIp(req);
+    const { password, confirmPassword, captcha, email, emailCode } =
+      forgetPasswordDto;
+    // 第一步先校验两次输入的密码是否相同
+    if (password !== confirmPassword) {
+      throw new BadRequestException('两次输入的密码不一致！！！');
+    }
+    // 通过bcryptjs加密库创建盐值，并且替换掉老的用户的盐
+    const salt = makeSalt();
+    // 密码进行hash
+    const hashPassword = encryptPassword(password, salt);
+    // 从redis中获取图灵验证码
+    const fisherVerifyKey: string = await this.cacheManager.get(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+    );
+    if (fisherVerifyKey?.toLowerCase() !== captcha?.toLowerCase()) {
+      throw new BadRequestException('图灵验证码不正确');
+    }
+    // 验证邮箱验证码
+    await this.isEmailCodeExists(email, emailCode);
+    // 先去用户表查一下用户是否注册，没有注册返回
+    const { userId } = await this.userInfoService.getUserInfoByEmail(email);
+    // 修改密码
+    const result = await this.userRepository.update(
+      { id: userId },
+      {
+        password: hashPassword,
+        salt,
+      },
+    );
+    // 不管更新成功没有，都删除图灵验证码和邮箱验证码
+    // 删除邮箱验证码
+    await this.cacheManager.del(`${UserConstants.FISHER_EMAIL_KEY}${email}`);
+    // 删除图灵验证码
+    await this.cacheManager.del(
+      `${UserConstants.FISHER_VERIFY_KEY}${clientIp}`,
+    );
+    return result;
   }
 
   findAll() {
@@ -225,6 +264,8 @@ export class UserService {
     const result: string = await this.cacheManager.get(
       `${UserConstants.FISHER_EMAIL_KEY}${email}`,
     );
+    if (!result)
+      throw new BadRequestException('没有收到邮箱验证码，请重新发送');
     if (emailCode !== result) throw new BadRequestException('邮箱验证码不正确');
   }
 }
